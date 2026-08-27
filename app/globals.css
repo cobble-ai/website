@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #4c1620;
+  --color-cream: #eae0cc;
+  --color-ember-from: #ea7a2a;
+  --color-ember-to: #fe974e;
+}
+
+@theme inline {
+  --font-display: var(--font-instrument-serif);
+  --font-sans: var(--font-inter);
+}
+
+::selection {
+  background: var(--color-ember-from);
+  color: var(--color-ink);
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
