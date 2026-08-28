@@ -555,8 +555,8 @@ export default function WaitlistForm() {
               }
               className="h-5 w-5 shrink-0 rounded accent-ember-from"
             />
-            I&apos;d be open to being considered for one of the first free
-            edits.
+            I&apos;d like to be amongst the first to receive early access
+            when it&apos;s ready
           </label>
 
           <div className="flex flex-col gap-1.5">
