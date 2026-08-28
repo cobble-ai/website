@@ -14,7 +14,7 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const title = "Cobble — edit videos with natural language";
+const title = "Cobble: edit videos with natural language";
 const description =
   "Editing takes up most of your time making videos. Conventional editors are too slow, AI editors are too clunky. Cobble is here to fix that. Join the waitlist.";
 

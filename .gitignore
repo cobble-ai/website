@@ -41,5 +41,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# internal strategy doc — not part of the website, keep out of repo history
+# internal strategy doc; not part of the website, keep out of repo history
 /cobble-core.md

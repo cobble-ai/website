@@ -9,5 +9,5 @@ create table if not exists waitlist (
 
 -- Row Level Security is enabled with no policies, so the anon/public key
 -- cannot read or write this table at all. The /api/waitlist route uses the
--- service role key, which bypasses RLS entirely — that's the only writer.
+-- service role key, which bypasses RLS entirely. That's the only writer.
 alter table waitlist enable row level security;

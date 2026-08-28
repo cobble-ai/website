@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     const { error } = await supabase.from("waitlist").insert({ email });
 
     if (error) {
-      // 23505 = unique_violation. Already on the list — treat as idempotent
+      // 23505 = unique_violation. Already on the list; treat as idempotent
       // success rather than leaking whether an email is registered.
       if (error.code === "23505") {
         isNewSignup = false;

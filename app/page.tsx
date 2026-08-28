@@ -4,7 +4,7 @@ import WaitlistForm from "@/components/WaitlistForm";
 const reassurances = [
   "Mostly done before you touch a timeline",
   "Built from your clips, not a stock catalog",
-  "Fix any cut in seconds — you stay in control",
+  "Fix any cut in seconds. You stay in control",
 ];
 
 export default function Home() {
@@ -14,10 +14,6 @@ export default function Home() {
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-24">
         <div className="flex w-full max-w-2xl flex-col items-center text-center">
-          <span className="mb-8 rounded-full border border-cream/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-cream/60">
-            Private beta · for creators posting 2+ a week
-          </span>
-
           <h1 className="font-display text-4xl leading-[1.1] sm:text-5xl md:text-6xl">
             Edit videos with{" "}
             <span className="bg-gradient-to-r from-ember-from to-ember-to bg-clip-text text-transparent">

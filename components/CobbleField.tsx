@@ -12,12 +12,12 @@ const CURSOR_GLOW_RADIUS = 260;
 const FILL_ALPHA_MIN = 0.008;
 const FILL_ALPHA_MAX = 0.022;
 // How far each stone pulls in from its shared cell edge, opening a gap that
-// reads as mortar/sand between stones — the range gives some stones a
+// reads as mortar/sand between stones. The range gives some stones a
 // generous gap and others almost none, like a real hand-set path.
 const INSET_MIN = 0.7;
 const INSET_MAX = 0.92;
 // Per-vertex radial wobble so a stone's outline isn't a scaled copy of a
-// tidy polygon — it should look hand-shaped, not geometric.
+// tidy polygon. It should look hand-shaped, not geometric.
 const WOBBLE = 0.09;
 const CREAM = "234, 224, 204";
 const EMBER = "234, 122, 42";

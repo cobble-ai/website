@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 
 // Server-only client. Uses the service role key so it can write to the
 // waitlist table directly, bypassing RLS (which intentionally has no public
-// insert policy — see supabase/schema.sql). Never import this from a
+// insert policy; see supabase/schema.sql). Never import this from a
 // client component.
 export function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL;
