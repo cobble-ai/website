@@ -14,9 +14,9 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const title = "Cobble — a near-finished edit, not a blank timeline";
+const title = "Cobble — edit videos with natural language";
 const description =
-  "Cobble hands back a near-finished edit of your raw take — b-roll, music, pacing and hook variants already placed. Join the waitlist.";
+  "Editing takes up most of your time making videos. Conventional editors are too slow, AI editors are too clunky. Cobble is here to fix that. Join the waitlist.";
 
 export const metadata: Metadata = {
   title,

@@ -2,9 +2,9 @@ import CobbleField from "@/components/CobbleField";
 import WaitlistForm from "@/components/WaitlistForm";
 
 const reassurances = [
-  "Your footage, not stock everyone else has",
-  "Every cut is overridable",
-  "Licensed for monetized accounts",
+  "Mostly done before you touch a timeline",
+  "Built from your clips, not a stock catalog",
+  "Fix any cut in seconds — you stay in control",
 ];
 
 export default function Home() {
@@ -19,17 +19,16 @@ export default function Home() {
           </span>
 
           <h1 className="font-display text-4xl leading-[1.1] sm:text-5xl md:text-6xl">
-            Stop starting from a{" "}
+            Edit videos with{" "}
             <span className="bg-gradient-to-r from-ember-from to-ember-to bg-clip-text text-transparent">
-              blank timeline.
+              natural language.
             </span>
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-cream/70 sm:text-lg">
-            Cobble hands back a near-finished edit of your raw take — b-roll,
-            music, pacing and hook variants already placed. You fix the parts
-            it got wrong in about 90 seconds, instead of building the whole
-            thing from scratch.
+            Editing takes up most of your time making videos. Conventional
+            editors are too slow, AI editors are too clunky. Cobble is here to
+            fix that.
           </p>
 
           <div className="mt-10 w-full">

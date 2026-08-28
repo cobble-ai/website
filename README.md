@@ -39,4 +39,4 @@ None of these are prefixed with `NEXT_PUBLIC_` — they're only ever read server
 
 ## Deploy
 
-Push to `main` and import the repo in Vercel, or run `vercel` from this directory. Framework preset is auto-detected as Next.js.
+Push to `main` and import the repo in Vercel, or run `vercel` from this directory. Framework preset should be **Next.js** — do not set a custom Output Directory (Vercel handles `.next` automatically). The included `vercel.json` enforces this.
