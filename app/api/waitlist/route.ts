@@ -4,6 +4,31 @@ import { getResend } from "@/lib/resend";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+type WaitlistBody = {
+  email?: unknown;
+  company?: unknown;
+  handle?: unknown;
+  country?: unknown;
+  archive?: unknown;
+  broll_sources?: unknown;
+  edit_time?: unknown;
+  paid_for?: unknown;
+  free_edit_optin?: unknown;
+  annoyance?: unknown;
+  source?: unknown;
+  submitted_at?: unknown;
+  step_reached?: unknown;
+};
+
+function asStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value.filter((item): item is string => typeof item === "string");
+}
+
+function asString(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
 function confirmationEmailHtml() {
   return `
     <div style="background:#4C1620;padding:40px 24px;font-family:Georgia,'Times New Roman',serif;">
@@ -15,7 +40,8 @@ function confirmationEmailHtml() {
           You&rsquo;re on the list.
         </h1>
         <p style="font-size:15px;line-height:1.6;opacity:0.75;margin:0;font-family:Arial,Helvetica,sans-serif;">
-          We&rsquo;ll email you the moment your seat opens. No spam before then.
+          One thing that&rsquo;ll move you up it: reply to this email with a
+          link to the last video you posted.
         </p>
       </div>
     </div>
@@ -23,7 +49,7 @@ function confirmationEmailHtml() {
 }
 
 export async function POST(request: Request) {
-  let body: { email?: unknown; company?: unknown };
+  let body: WaitlistBody;
 
   try {
     body = await request.json();
@@ -46,24 +72,59 @@ export async function POST(request: Request) {
     );
   }
 
-  let isNewSignup = true;
+  const stepReached =
+    typeof body.step_reached === "number" ? body.step_reached : undefined;
+
+  // Every call is a flat, partial record keyed on email. Only columns present
+  // here get written — upsert's ON CONFLICT DO UPDATE only touches the
+  // columns given in this call, so steps 1, 2, and 3 layer onto one row
+  // instead of overwriting each other's fields.
+  const record: Record<string, unknown> = { email };
+  const handle = asString(body.handle);
+  if (handle !== undefined) record.handle = handle;
+  const country = asString(body.country);
+  if (country !== undefined) record.country = country;
+  const archive = asStringArray(body.archive);
+  if (archive !== undefined) record.archive = archive;
+  const brollSources = asStringArray(body.broll_sources);
+  if (brollSources !== undefined) record.broll_sources = brollSources;
+  const editTime = asString(body.edit_time);
+  if (editTime !== undefined) record.edit_time = editTime;
+  const paidFor = asStringArray(body.paid_for);
+  if (paidFor !== undefined) record.paid_for = paidFor;
+  if (typeof body.free_edit_optin === "boolean") {
+    record.free_edit_optin = body.free_edit_optin;
+  }
+  const annoyance = asString(body.annoyance);
+  if (annoyance !== undefined) record.annoyance = annoyance;
+  const source = asString(body.source);
+  if (source !== undefined) record.source = source;
+  const submittedAt = asString(body.submitted_at);
+  if (submittedAt !== undefined) record.submitted_at = submittedAt;
+  if (stepReached !== undefined) record.step_reached = stepReached;
+
+  let alreadyExisted = false;
 
   try {
     const supabase = getSupabaseAdmin();
-    const { error } = await supabase.from("waitlist").insert({ email });
+
+    const { data: existing } = await supabase
+      .from("waitlist")
+      .select("email")
+      .eq("email", email)
+      .maybeSingle();
+    alreadyExisted = Boolean(existing);
+
+    const { error } = await supabase
+      .from("waitlist")
+      .upsert(record, { onConflict: "email" });
 
     if (error) {
-      // 23505 = unique_violation. Already on the list; treat as idempotent
-      // success rather than leaking whether an email is registered.
-      if (error.code === "23505") {
-        isNewSignup = false;
-      } else {
-        console.error("[waitlist] supabase insert failed:", error);
-        return NextResponse.json(
-          { error: "Something went wrong. Please try again." },
-          { status: 500 },
-        );
-      }
+      console.error("[waitlist] supabase upsert failed:", error);
+      return NextResponse.json(
+        { error: "Something went wrong. Please try again." },
+        { status: 500 },
+      );
     }
   } catch (err) {
     console.error("[waitlist] supabase client error:", err);
@@ -73,7 +134,9 @@ export async function POST(request: Request) {
     );
   }
 
-  if (isNewSignup) {
+  // Step 1 is the first contact for a genuinely new email, so it's the one
+  // point where we send the confirmation email, and only once ever per email.
+  if (stepReached === 1 && !alreadyExisted) {
     try {
       const resend = getResend();
       const from = process.env.RESEND_FROM_EMAIL;

@@ -33,13 +33,7 @@ export default function Home() {
 
           <ul className="mt-8 flex flex-col items-center gap-2 text-sm text-cream/50 sm:flex-row sm:gap-6">
             {reassurances.map((item) => (
-              <li key={item} className="flex items-center gap-2">
-                <span
-                  aria-hidden
-                  className="h-1 w-1 rounded-full bg-cream/40"
-                />
-                {item}
-              </li>
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </div>

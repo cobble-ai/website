@@ -13,15 +13,19 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Waitlist backend
 
-Submitting the form calls [`app/api/waitlist/route.ts`](app/api/waitlist/route.ts), which:
+The form is a 3-step qualification flow ([`components/WaitlistForm.tsx`](components/WaitlistForm.tsx)). Step 1 (email, handle, country) saves as soon as it's valid, so an abandoned session still leaves a usable lead. Steps 2 and 3 call the same endpoint again and update that same row.
+
+Each step posts a flat, partial object to [`app/api/waitlist/route.ts`](app/api/waitlist/route.ts), which:
 
 1. Validates the email and checks a hidden honeypot field.
-2. Inserts the email into a `waitlist` table in Supabase using the service role key (server-only; the table has RLS enabled with no public policies, so it can't be written to from the browser).
-3. Sends a confirmation email via Resend. If the email send fails, the signup is still kept. Supabase is the source of truth.
+2. Upserts it into a `waitlist` table in Supabase, keyed on `email`, using the service role key (server-only; the table has RLS enabled with no public policies, so it can't be written to from the browser). Upsert means each call only touches the columns it sends, so three separate calls build up one row instead of overwriting each other.
+3. Sends a confirmation email via Resend, once, the first time an email is seen (`step_reached === 1` and the email didn't already exist). If the email send fails, the signup is still kept. Supabase is the source of truth.
+
+Funnel instrumentation (`page_view`, `step_1_complete`, `step_2_complete`, `form_submit`) is `console.log`-only for now (prefixed `[analytics]`) — there's no analytics library wired up yet.
 
 ### One-time setup
 
-1. **Supabase**: create a project, then run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor to create the `waitlist` table. Grab the project URL and the **service role key** (Project Settings > API), not the anon key.
+1. **Supabase**: create a project, then run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor to create/update the `waitlist` table. Grab the project URL and the **service role key** (Project Settings > API), not the anon key.
 2. **Resend**: create an API key, and verify a sending domain (Domains tab) so you can send from an address on it, e.g. `Cobble <hello@yourdomain.com>`. Without a verified domain, Resend will only let you send to your own account email.
 3. Copy `.env.example` to `.env.local` and fill in the four values.
 4. In Vercel, add the same four environment variables (Project Settings > Environment Variables) before deploying.
