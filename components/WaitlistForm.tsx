@@ -299,6 +299,7 @@ export default function WaitlistForm() {
   };
 
   if (submitted) {
+    const hasPosted = form.editTime !== NOT_POSTED_OPTION;
     return (
       <div
         role="status"
@@ -306,8 +307,9 @@ export default function WaitlistForm() {
       >
         <p className="font-medium text-cream">You&apos;re on the list.</p>
         <p className="text-sm text-cream/60">
-          One thing that&apos;ll move you up it: reply to the confirmation
-          email with a link to the last video you posted.
+          {hasPosted
+            ? "One thing that'll move you up it: reply to the confirmation email with a link to the last video you posted."
+            : "I'll email you when there's something real to use."}
         </p>
       </div>
     );
@@ -601,7 +603,7 @@ export default function WaitlistForm() {
               disabled={status === "saving"}
               className={`${CTA_CLASS} flex-1`}
             >
-              {status === "saving" ? "Saving…" : "Apply"}
+              {status === "saving" ? "Saving…" : "Join"}
             </button>
           </div>
         </div>
