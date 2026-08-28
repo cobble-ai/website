@@ -17,6 +17,10 @@ alter table waitlist add column if not exists country text;
 alter table waitlist add column if not exists archive text[];
 alter table waitlist add column if not exists broll_sources text[];
 alter table waitlist add column if not exists edit_time text;
+-- false only when edit_time is "I haven't posted a video yet"; true otherwise
+-- (including when step 2 is skipped entirely). Drives which confirmation
+-- email variant gets sent.
+alter table waitlist add column if not exists has_posted boolean not null default true;
 
 -- Step 3: final tap question, opt-in, optional free text.
 alter table waitlist add column if not exists paid_for text[];
@@ -27,6 +31,10 @@ alter table waitlist add column if not exists annoyance text;
 alter table waitlist add column if not exists source text;
 alter table waitlist add column if not exists submitted_at timestamptz;
 alter table waitlist add column if not exists step_reached smallint;
+
+-- Set once the confirmation email actually sends, so a retried or
+-- double-clicked final submit never sends it twice for the same email.
+alter table waitlist add column if not exists confirmation_sent_at timestamptz;
 
 -- Row Level Security is enabled with no policies, so the anon/public key
 -- cannot read or write this table at all. The /api/waitlist route uses the

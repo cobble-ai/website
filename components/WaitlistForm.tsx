@@ -51,7 +51,9 @@ const EDIT_TIME_OPTIONS = [
   "1–2 hours",
   "2–4 hours",
   "4+ hours",
+  "I haven't posted a video yet",
 ];
+const NOT_POSTED_OPTION = "I haven't posted a video yet";
 
 const PAID_FOR_OPTIONS = [
   "Nothing yet",
@@ -253,6 +255,7 @@ export default function WaitlistForm() {
           archive: form.archive,
           broll_sources: form.brollSources,
           edit_time: form.editTime,
+          has_posted: form.editTime !== NOT_POSTED_OPTION,
         },
         sourceRef.current,
         2,

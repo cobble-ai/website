@@ -12,6 +12,7 @@ type WaitlistBody = {
   archive?: unknown;
   broll_sources?: unknown;
   edit_time?: unknown;
+  has_posted?: unknown;
   paid_for?: unknown;
   free_edit_optin?: unknown;
   annoyance?: unknown;
@@ -29,23 +30,54 @@ function asString(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-function confirmationEmailHtml() {
-  return `
-    <div style="background:#4C1620;padding:40px 24px;font-family:Georgia,'Times New Roman',serif;">
-      <div style="max-width:480px;margin:0 auto;text-align:center;color:#EAE0CC;">
-        <p style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;opacity:0.6;margin:0 0 24px;">
+// Body copy is verbatim per spec, including its em dashes.
+function confirmationEmail(hasPosted: boolean, freeEditOptin: boolean) {
+  const subject = hasPosted
+    ? "You're on the list — one question"
+    : "You're on the list";
+
+  const freeEditBlock =
+    hasPosted && freeEditOptin
+      ? `<p>You said you'd be open to one of the first free edits. That's the shortlist this reply matters most for.</p>`
+      : "";
+
+  const bodyHtml = hasPosted
+    ? `
+      <p>Hey, Peter here. One of the two people building Cobble.</p>
+      <p>You're on the list. That doesn't do much on its own, so here's the part that does:</p>
+      <p>Reply and tell me which of your recent videos was the worst one to edit, and what specifically made it bad. Not the general "editing takes ages" version — the actual video and the actual part that dragged.</p>
+      <p>I read all of them. We're picking a small number of creators to run real edits for first, and this is what I go on.</p>
+      ${freeEditBlock}
+      <p>On timing: Cobble isn't ready, and I'm not going to pretend it's a few weeks away. What I am doing is posting the whole build publicly — every version of the output, including the bad ones — at @peter_ishere. That's the fastest way to find out whether this is going to be any good before you ever get access.</p>
+      <p>I'll email you when there's something real to use. Roughly once a month otherwise, one paragraph, nothing else.</p>
+      <p>Peter</p>
+    `
+    : `
+      <p>Hey, Peter here — one of the two people building Cobble.</p>
+      <p>You're on the list. Straight up though: Cobble is being built for creators already posting regularly and losing hours to editing, so you're early for us rather than the other way round.</p>
+      <p>No ask from me. If you want the interesting part in the meantime, I'm posting the whole build publicly at @peter_ishere — every version of the output, including the bad ones.</p>
+      <p>I'll email when there's something real to use.</p>
+      <p>Peter</p>
+    `;
+
+  // Thin maroon strip for the wordmark only; the body itself is a plain
+  // light background with left-aligned text, and everything uses a system
+  // sans stack since Gmail strips @font-face and the old serif fallback
+  // read as an accidental design choice rather than a deliberate one.
+  const html = `
+    <div style="background:#EAE0CC;font-family:'Helvetica Neue',Arial,sans-serif;">
+      <div style="background:#4C1620;padding:14px 24px;">
+        <span style="color:#EAE0CC;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;font-weight:bold;">
           Cobble
-        </p>
-        <h1 style="font-size:28px;font-weight:400;line-height:1.2;margin:0 0 16px;">
-          You&rsquo;re on the list.
-        </h1>
-        <p style="font-size:15px;line-height:1.6;opacity:0.75;margin:0;font-family:Arial,Helvetica,sans-serif;">
-          One thing that&rsquo;ll move you up it: reply to this email with a
-          link to the last video you posted.
-        </p>
+        </span>
+      </div>
+      <div style="max-width:480px;margin:0 auto;padding:32px 24px;text-align:left;color:#2a2a2a;font-size:15px;line-height:1.6;">
+        ${bodyHtml}
       </div>
     </div>
   `;
+
+  return { subject, html };
 }
 
 export async function POST(request: Request) {
@@ -90,11 +122,13 @@ export async function POST(request: Request) {
   if (brollSources !== undefined) record.broll_sources = brollSources;
   const editTime = asString(body.edit_time);
   if (editTime !== undefined) record.edit_time = editTime;
+  if (typeof body.has_posted === "boolean") {
+    record.has_posted = body.has_posted;
+  }
   const paidFor = asStringArray(body.paid_for);
   if (paidFor !== undefined) record.paid_for = paidFor;
-  if (typeof body.free_edit_optin === "boolean") {
-    record.free_edit_optin = body.free_edit_optin;
-  }
+  const freeEditOptin = typeof body.free_edit_optin === "boolean" ? body.free_edit_optin : undefined;
+  if (freeEditOptin !== undefined) record.free_edit_optin = freeEditOptin;
   const annoyance = asString(body.annoyance);
   if (annoyance !== undefined) record.annoyance = annoyance;
   const source = asString(body.source);
@@ -103,17 +137,8 @@ export async function POST(request: Request) {
   if (submittedAt !== undefined) record.submitted_at = submittedAt;
   if (stepReached !== undefined) record.step_reached = stepReached;
 
-  let alreadyExisted = false;
-
   try {
     const supabase = getSupabaseAdmin();
-
-    const { data: existing } = await supabase
-      .from("waitlist")
-      .select("email")
-      .eq("email", email)
-      .maybeSingle();
-    alreadyExisted = Boolean(existing);
 
     const { error } = await supabase
       .from("waitlist")
@@ -126,35 +151,51 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    // Step 3 (Apply) is the only point where we have both has_posted (step 2)
+    // and free_edit_optin (step 3), which the confirmation email branches on.
+    // confirmation_sent_at guards against sending it twice for the same email.
+    if (stepReached === 3) {
+      const { data: row } = await supabase
+        .from("waitlist")
+        .select("has_posted, confirmation_sent_at")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (row && !row.confirmation_sent_at) {
+        try {
+          const resend = getResend();
+          const from = process.env.RESEND_FROM_EMAIL;
+          const replyTo = process.env.RESEND_REPLY_TO_EMAIL;
+          if (!from) {
+            throw new Error("Missing RESEND_FROM_EMAIL environment variable.");
+          }
+          if (!replyTo) {
+            throw new Error("Missing RESEND_REPLY_TO_EMAIL environment variable.");
+          }
+
+          const hasPosted = row.has_posted !== false;
+          const { subject, html } = confirmationEmail(hasPosted, freeEditOptin ?? false);
+
+          await resend.emails.send({ from, to: email, replyTo, subject, html });
+
+          await supabase
+            .from("waitlist")
+            .update({ confirmation_sent_at: new Date().toISOString() })
+            .eq("email", email);
+        } catch (err) {
+          // The signup itself already succeeded (it's in Supabase); a failed
+          // confirmation email shouldn't fail the request or block the user.
+          console.error("[waitlist] resend send failed:", err);
+        }
+      }
+    }
   } catch (err) {
     console.error("[waitlist] supabase client error:", err);
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 500 },
     );
-  }
-
-  // Step 1 is the first contact for a genuinely new email, so it's the one
-  // point where we send the confirmation email, and only once ever per email.
-  if (stepReached === 1 && !alreadyExisted) {
-    try {
-      const resend = getResend();
-      const from = process.env.RESEND_FROM_EMAIL;
-      if (!from) {
-        throw new Error("Missing RESEND_FROM_EMAIL environment variable.");
-      }
-
-      await resend.emails.send({
-        from,
-        to: email,
-        subject: "You're on the Cobble waitlist",
-        html: confirmationEmailHtml(),
-      });
-    } catch (err) {
-      // The signup itself already succeeded (it's in Supabase); a failed
-      // confirmation email shouldn't fail the request or block the user.
-      console.error("[waitlist] resend send failed:", err);
-    }
   }
 
   return NextResponse.json({ status: "ok" });
