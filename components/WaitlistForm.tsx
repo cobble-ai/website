@@ -146,7 +146,7 @@ function ExpandPanel({
 }) {
   return (
     <div
-      className="grid transition-[grid-template-rows] duration-300 ease-out"
+      className="grid transition-[grid-template-rows] duration-700 ease-in-out"
       style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
     >
       <div className="overflow-hidden">{children}</div>
@@ -162,7 +162,6 @@ export default function WaitlistForm() {
   const [errorMessage, setErrorMessage] = useState("");
   // Doesn't affect rendering, so it lives in a ref rather than state.
   const sourceRef = useRef("direct");
-  const handleInputRef = useRef<HTMLInputElement | null>(null);
 
   const [form, setForm] = useState<FormState>({
     email: "",
@@ -192,7 +191,6 @@ export default function WaitlistForm() {
   const expand = () => {
     if (expanded) return;
     setExpanded(true);
-    window.setTimeout(() => handleInputRef.current?.focus(), 300);
   };
 
   const handleStep1Submit = async (event: FormEvent<HTMLFormElement>) => {
@@ -219,19 +217,21 @@ export default function WaitlistForm() {
       return;
     }
 
-    const handle = stripHandle(form.handle);
-    if (!handle) {
+    const country = form.country.trim();
+    if (!country) {
       setStatus("error");
-      setErrorMessage("Enter your Instagram or TikTok handle.");
+      setErrorMessage("Select your country.");
       return;
     }
+
+    const handle = stripHandle(form.handle);
 
     setStatus("saving");
     setErrorMessage("");
 
     try {
-      await postStep({ email, handle, country: form.country }, sourceRef.current, 1);
-      setForm((prev) => ({ ...prev, email, handle }));
+      await postStep({ email, handle, country }, sourceRef.current, 1);
+      setForm((prev) => ({ ...prev, email, handle, country }));
       track("step_1_complete", { step: 1 });
       setStatus("idle");
       setStep(2);
@@ -331,40 +331,45 @@ export default function WaitlistForm() {
             />
           </div>
 
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <label htmlFor={emailId} className="sr-only">
-              Email address
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor={emailId}
+              className={expanded ? "text-xs uppercase tracking-[0.14em] text-cream/50" : "sr-only"}
+            >
+              Email <span aria-hidden className="text-ember-to">*</span>
             </label>
-            <input
-              id={emailId}
-              name="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              enterKeyHint="next"
-              required
-              placeholder="you@domain.com"
-              value={form.email}
-              onChange={(event) => {
-                expand();
-                setForm((prev) => ({ ...prev, email: event.target.value }));
-              }}
-              onFocus={expand}
-              onClick={expand}
-              aria-invalid={status === "error"}
-              aria-describedby={status === "error" ? errorId : undefined}
-              disabled={status === "saving"}
-              className={`${INPUT_CLASS} placeholder:text-cream/40 flex-1`}
-            />
-            {!expanded && (
-              <button
-                type="button"
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <input
+                id={emailId}
+                name="email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                enterKeyHint="next"
+                required
+                placeholder="you@domain.com"
+                value={form.email}
+                onChange={(event) => {
+                  expand();
+                  setForm((prev) => ({ ...prev, email: event.target.value }));
+                }}
+                onFocus={expand}
                 onClick={expand}
-                className={`${CTA_CLASS} shrink-0 sm:w-auto`}
-              >
-                Join the waitlist
-              </button>
-            )}
+                aria-invalid={status === "error"}
+                aria-describedby={status === "error" ? errorId : undefined}
+                disabled={status === "saving"}
+                className={`${INPUT_CLASS} placeholder:text-cream/40 flex-1`}
+              />
+              {!expanded && (
+                <button
+                  type="button"
+                  onClick={expand}
+                  className={`${CTA_CLASS} shrink-0 sm:w-auto`}
+                >
+                  Join the waitlist
+                </button>
+              )}
+            </div>
           </div>
 
           <ExpandPanel expanded={expanded}>
@@ -377,13 +382,11 @@ export default function WaitlistForm() {
                   Instagram or TikTok handle
                 </label>
                 <input
-                  ref={handleInputRef}
                   id={handleId}
                   name="handle"
                   type="text"
                   autoComplete="off"
                   enterKeyHint="next"
-                  required
                   value={form.handle}
                   onChange={(event) =>
                     setForm((prev) => ({ ...prev, handle: event.target.value }))
@@ -391,9 +394,6 @@ export default function WaitlistForm() {
                   disabled={status === "saving"}
                   className={INPUT_CLASS}
                 />
-                <p className="text-xs text-cream/50">
-                  So we can look at your actual work.
-                </p>
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -401,11 +401,12 @@ export default function WaitlistForm() {
                   htmlFor={countryId}
                   className="text-xs uppercase tracking-[0.14em] text-cream/50"
                 >
-                  Country
+                  Country <span aria-hidden className="text-ember-to">*</span>
                 </label>
                 <select
                   id={countryId}
                   name="country"
+                  required
                   value={form.country}
                   onChange={(event) =>
                     setForm((prev) => ({ ...prev, country: event.target.value }))
