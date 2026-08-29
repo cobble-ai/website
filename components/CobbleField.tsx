@@ -20,7 +20,7 @@ const INSET_MAX = 0.92;
 // tidy polygon. It should look hand-shaped, not geometric.
 const WOBBLE = 0.09;
 const CREAM = "234, 224, 204";
-const EMBER = "234, 122, 42";
+const EMBER = "232, 130, 58";
 
 function seedPoints(width: number, height: number): Point[] {
   const cols = Math.max(4, Math.round(width / TARGET_CELL_SIZE));

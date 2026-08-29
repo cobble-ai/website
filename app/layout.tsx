@@ -1,16 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter } from "next/font/google";
+import { Bricolage_Grotesque, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+const bricolageGrotesque = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  weight: "800",
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const schibstedGrotesk = Schibsted_Grotesk({
+  variable: "--font-schibsted",
   subsets: ["latin"],
 });
 
@@ -42,7 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${inter.variable} h-full antialiased`}
+      className={`${bricolageGrotesque.variable} ${schibstedGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-ink text-cream">
         {children}

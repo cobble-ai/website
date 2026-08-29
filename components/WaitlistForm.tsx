@@ -21,10 +21,10 @@ interface FormState {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const INPUT_CLASS =
-  "min-h-11 w-full rounded-full border border-cream/25 bg-cream/5 px-5 py-3 text-cream outline-none transition-colors duration-150 focus:border-cream/60 disabled:opacity-60";
+  "min-h-11 w-full border border-cream/25 bg-cream/5 px-4 py-2.5 text-cream outline-none transition-colors duration-150 focus:border-cream/60 disabled:opacity-60";
 
 const CTA_CLASS =
-  "min-h-11 rounded-full bg-gradient-to-r from-ember-from to-ember-to px-6 py-3 font-medium text-ink transition-opacity duration-150 hover:opacity-90 disabled:opacity-60";
+  "min-h-11 bg-ember-from px-6 py-2.5 font-medium text-ink transition-opacity duration-150 hover:opacity-90 disabled:opacity-60";
 
 const ARCHIVE_OPTIONS = [
   "The full raw takes",
@@ -126,7 +126,7 @@ function OptionButton({
       type="button"
       onClick={onToggle}
       aria-pressed={selected}
-      className={`min-h-11 w-full rounded-2xl border px-4 py-3 text-left text-sm leading-snug transition-colors duration-150 ${
+      className={`min-h-11 w-full border px-4 py-3 text-left text-sm leading-snug transition-colors duration-150 ${
         selected
           ? "border-transparent bg-ember-from text-ink"
           : "border-cream/20 bg-cream/5 text-cream hover:border-cream/40"
@@ -303,7 +303,7 @@ export default function WaitlistForm() {
     return (
       <div
         role="status"
-        className="mx-auto flex w-full max-w-md flex-col gap-1 rounded-3xl border border-cream/20 bg-cream/5 px-6 py-5 text-center"
+        className="flex w-full flex-col gap-1 border-l-2 border-ember-from bg-cream/5 px-5 py-4 text-left"
       >
         <p className="font-medium text-cream">You&apos;re on the list.</p>
         <p className="text-sm text-cream/60">
@@ -316,11 +316,9 @@ export default function WaitlistForm() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-4 text-left">
+    <div className="flex w-full flex-col gap-4 text-left">
       {(expanded || step > 1) && (
-        <p className="text-xs uppercase tracking-[0.18em] text-cream/50">
-          Step {step} of 3
-        </p>
+        <p className="text-xs text-cream/50">Step {step} of 3</p>
       )}
 
       {step === 1 && (
@@ -339,9 +337,9 @@ export default function WaitlistForm() {
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor={emailId}
-              className={expanded ? "text-xs uppercase tracking-[0.14em] text-cream/50" : "sr-only"}
+              className={expanded ? "text-xs text-cream/50" : "sr-only"}
             >
-              Email <span aria-hidden className="text-ember-to">*</span>
+              Email <span aria-hidden className="text-lifted">*</span>
             </label>
             <div className="flex flex-col gap-2 sm:flex-row">
               <input
@@ -380,10 +378,7 @@ export default function WaitlistForm() {
           <ExpandPanel expanded={expanded}>
             <div className="flex flex-col gap-4 pt-1">
               <div className="flex flex-col gap-1.5">
-                <label
-                  htmlFor={handleId}
-                  className="text-xs uppercase tracking-[0.14em] text-cream/50"
-                >
+                <label htmlFor={handleId} className="text-xs text-cream/50">
                   Instagram or TikTok handle
                 </label>
                 <input
@@ -402,11 +397,8 @@ export default function WaitlistForm() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label
-                  htmlFor={countryId}
-                  className="text-xs uppercase tracking-[0.14em] text-cream/50"
-                >
-                  Country <span aria-hidden className="text-ember-to">*</span>
+                <label htmlFor={countryId} className="text-xs text-cream/50">
+                  Country <span aria-hidden className="text-lifted">*</span>
                 </label>
                 <select
                   id={countryId}
@@ -433,7 +425,7 @@ export default function WaitlistForm() {
               <p
                 id={errorId}
                 aria-live="polite"
-                className="min-h-[1.25rem] px-2 text-sm text-ember-to"
+                className="min-h-[1.25rem] text-sm text-lifted"
               >
                 {status === "error" ? errorMessage : ""}
               </p>
@@ -558,7 +550,7 @@ export default function WaitlistForm() {
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, freeEditOptin: event.target.checked }))
               }
-              className="h-5 w-5 shrink-0 rounded accent-ember-from"
+              className="h-5 w-5 shrink-0 accent-ember-from"
             />
             I&apos;d like to be amongst the first to receive early access
             when it&apos;s ready
@@ -577,14 +569,11 @@ export default function WaitlistForm() {
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, annoyance: event.target.value }))
               }
-              className="w-full rounded-2xl border border-cream/25 bg-cream/5 px-4 py-3 text-cream outline-none transition-colors duration-150 focus:border-cream/60"
+              className="w-full border border-cream/25 bg-cream/5 px-4 py-3 text-cream outline-none transition-colors duration-150 focus:border-cream/60"
             />
           </div>
 
-          <p
-            aria-live="polite"
-            className="min-h-[1.25rem] text-sm text-ember-to"
-          >
+          <p aria-live="polite" className="min-h-[1.25rem] text-sm text-lifted">
             {status === "error" ? errorMessage : ""}
           </p>
 

@@ -1,15 +1,20 @@
 @import "tailwindcss";
 
+/* Locked palette: maroon 800, bone 100, amber, lifted maroon. Do not change
+   these values or introduce new hex colors. */
 @theme {
   --color-ink: #4c1620;
   --color-cream: #eae0cc;
-  --color-ember-from: #ea7a2a;
-  --color-ember-to: #fe974e;
+  --color-ember-from: #e8823a;
+  --color-lifted: #b3293f;
+  --radius-none: 0px;
 }
 
 @theme inline {
-  --font-display: var(--font-instrument-serif);
-  --font-sans: var(--font-inter);
+  --font-display: var(--font-bricolage), "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  --font-sans: var(--font-schibsted), "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
 }
 
 ::selection {
@@ -20,7 +25,7 @@
 body {
   background: var(--color-ink);
   color: var(--color-cream);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* Browsers fill autofilled/autocompleted inputs with a light background by
