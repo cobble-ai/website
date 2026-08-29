@@ -12,40 +12,38 @@ export default function Home() {
     <div className="relative flex min-h-screen flex-1 flex-col">
       <CobbleField />
 
-      <div className="relative z-10 flex flex-1 flex-col px-6 pt-10 pb-14 sm:px-10 sm:pt-14 md:px-16">
-        <p className="font-display text-xl leading-none tracking-[-0.02em] lowercase">
-          cobble
-        </p>
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-16">
+        <div className="flex w-full max-w-2xl flex-col items-center text-center">
+          <p className="font-display text-xl leading-none tracking-[-0.02em] lowercase">
+            cobble
+          </p>
 
-        <div className="mt-1 h-[2px] w-16 bg-ember-from" />
+          <div className="mt-2 h-[2px] w-16 bg-ember-from" />
 
-        <div className="flex flex-1 flex-col justify-center">
-          <div className="flex w-full max-w-2xl flex-col">
-            <h1 className="font-display text-5xl leading-[0.98] tracking-[-0.01em] sm:text-6xl md:text-7xl">
-              Edit videos with{" "}
-              <span className="text-ember-from">natural language.</span>
-            </h1>
+          <h1 className="mt-8 font-display text-5xl leading-[0.98] tracking-[-0.01em] sm:text-6xl md:text-7xl">
+            Edit videos with{" "}
+            <span className="text-ember-from">natural language.</span>
+          </h1>
 
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-cream/70 sm:text-lg">
-              Editing takes up most of your time making videos. Conventional
-              editors are too slow, AI editors are too clunky. Cobble is here
-              to fix that.
-            </p>
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-cream/70 sm:text-lg">
+            Editing takes up most of your time making videos. Conventional
+            editors are too slow, AI editors are too clunky. Cobble is here to
+            fix that.
+          </p>
 
-            <div className="mt-8 w-full max-w-md">
-              <WaitlistForm />
-            </div>
-
-            <ul className="mt-8 flex flex-col gap-2 text-sm text-cream/50">
-              {reassurances.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+          <div className="mt-8 w-full max-w-md">
+            <WaitlistForm />
           </div>
+
+          <ul className="mt-8 flex flex-col items-center gap-2 text-sm text-cream/50 sm:flex-row sm:gap-6">
+            {reassurances.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
         </div>
       </div>
 
-      <footer className="relative z-10 px-6 pb-6 text-xs text-cream/40 sm:px-10 md:px-16">
+      <footer className="relative z-10 px-6 pb-8 text-center text-xs text-cream/40">
         No spam. One email when your seat opens.
       </footer>
     </div>
