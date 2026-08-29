@@ -35,8 +35,10 @@ function asString(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-// Body copy is verbatim per spec, including its em dashes.
-function confirmationEmail(hasPosted: boolean, freeEditOptin: boolean) {
+// Body copy is verbatim per spec, including its em dashes. Exported so the
+// backfill script (scripts/send-confirmations.ts) can reuse the exact same
+// templates instead of duplicating them.
+export function confirmationEmail(hasPosted: boolean, freeEditOptin: boolean) {
   const subject = hasPosted
     ? "You're on the list — one question"
     : "You're on the list";
@@ -196,11 +198,17 @@ export async function POST(request: Request) {
     // and free_edit_optin (step 3), which the confirmation email branches on.
     // confirmation_sent_at guards against sending it twice for the same email.
     if (stepReached === 3) {
-      const { data: row } = await supabase
+      const { data: row, error: selectError } = await supabase
         .from("waitlist")
         .select("has_posted, confirmation_sent_at")
         .eq("email", email)
         .maybeSingle();
+
+      if (selectError) {
+        // Swallowing this used to be silent (no log, no throw), which made a
+        // missing/renamed column indistinguishable from "already sent."
+        console.error("[waitlist] supabase select before send failed:", selectError);
+      }
 
       if (row && !row.confirmation_sent_at) {
         try {
@@ -217,7 +225,24 @@ export async function POST(request: Request) {
           const hasPosted = row.has_posted !== false;
           const { subject, html } = confirmationEmail(hasPosted, freeEditOptin ?? false);
 
-          await resend.emails.send({ from, to: email, replyTo, subject, html });
+          // resend.emails.send() resolves with { data, error } instead of
+          // throwing on API-level failures (unverified sending domain,
+          // invalid from address, rate limits, etc). Not checking `error`
+          // here meant a failed send still got marked as sent below and was
+          // never retried.
+          const { error: sendError } = await resend.emails.send({
+            from,
+            to: email,
+            replyTo,
+            subject,
+            html,
+          });
+
+          if (sendError) {
+            throw new Error(
+              `Resend rejected the send: ${sendError.name} - ${sendError.message}`,
+            );
+          }
 
           await supabase
             .from("waitlist")
@@ -226,6 +251,8 @@ export async function POST(request: Request) {
         } catch (err) {
           // The signup itself already succeeded (it's in Supabase); a failed
           // confirmation email shouldn't fail the request or block the user.
+          // confirmation_sent_at stays null, so the next successful send
+          // attempt (or the backfill script) will pick this row back up.
           console.error("[waitlist] resend send failed:", err);
         }
       }

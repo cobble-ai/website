@@ -23,6 +23,20 @@ Each step posts a flat, partial object to [`app/api/waitlist/route.ts`](app/api/
 
 Funnel instrumentation (`page_view`, `step_1_complete`, `step_2_complete`, `form_submit`) is `console.log`-only for now (prefixed `[analytics]`) — there's no analytics library wired up yet.
 
+### Sending confirmation emails for existing rows
+
+If someone is in the `waitlist` table but never got a confirmation email (they signed up before Resend was configured correctly, or a send failed), run:
+
+```bash
+cp .env.example .env.local   # fill in the real (production) values first
+npm run send-confirmations -- --dry-run   # preview who it would email
+npm run send-confirmations                # actually sends
+```
+
+This sends to every row where `confirmation_sent_at` is still null, picking the right variant from that row's `has_posted`/`free_edit_optin` columns, regardless of which step they reached. It's safe to re-run: anything that sends successfully gets `confirmation_sent_at` set so it won't be emailed twice.
+
+If every send fails with something like *"You can only send testing emails to your own email address"*, your Resend sending domain isn't verified yet — see the Resend section above.
+
 ### One-time setup
 
 1. **Supabase**: create a project, then run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor to create/update the `waitlist` table. Grab the project URL and the **service role key** (Project Settings > API), not the anon key.
