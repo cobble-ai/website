@@ -63,7 +63,7 @@ async function main() {
 
   const { data: rows, error } = await supabase
     .from("waitlist")
-    .select("email, has_posted, free_edit_optin, confirmation_sent_at")
+    .select("email, has_posted, creator_partnership_optin, confirmation_sent_at")
     .is("confirmation_sent_at", null)
     .order("created_at", { ascending: true });
 
@@ -87,7 +87,7 @@ async function main() {
   for (const row of rows) {
     const email = row.email as string;
     const hasPosted = row.has_posted !== false;
-    const freeEditOptin = row.free_edit_optin === true;
+    const creatorPartnershipOptin = row.creator_partnership_optin === true;
     const variant = hasPosted ? "A (posted)" : "B (not posted)";
 
     if (DRY_RUN) {
@@ -95,7 +95,7 @@ async function main() {
       continue;
     }
 
-    const { subject, html } = confirmationEmail(hasPosted, freeEditOptin);
+    const { subject, html } = confirmationEmail(hasPosted, creatorPartnershipOptin);
 
     const { error: sendError } = await resend.emails.send({
       from: from!,

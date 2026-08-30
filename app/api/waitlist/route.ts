@@ -14,7 +14,7 @@ type WaitlistBody = {
   edit_time?: unknown;
   has_posted?: unknown;
   paid_for?: unknown;
-  free_edit_optin?: unknown;
+  creator_partnership_optin?: unknown;
   annoyance?: unknown;
   source?: unknown;
   submitted_at?: unknown;
@@ -33,16 +33,16 @@ function asString(value: unknown): string | undefined {
 // No em dashes anywhere in this copy, by request. Exported so the backfill
 // script (scripts/send-confirmations.ts) can reuse the exact same templates
 // instead of duplicating them.
-export function confirmationEmail(hasPosted: boolean, freeEditOptin: boolean) {
+export function confirmationEmail(hasPosted: boolean, creatorPartnershipOptin: boolean) {
   const subject = hasPosted
     ? "You're on the list: one question"
     : "You're on the list";
 
   const p = (text: string) => `<p style="margin:0 0 16px 0;">${text}</p>`;
 
-  const freeEditBlock =
-    hasPosted && freeEditOptin
-      ? p("You said you'd be open to one of the first free edits. That's the shortlist this reply matters most for.")
+  const creatorPartnershipBlock =
+    hasPosted && creatorPartnershipOptin
+      ? p("You said you'd be open to a creator partnership. That's the shortlist this reply matters most for.")
       : "";
 
   const bodyHtml = hasPosted
@@ -50,16 +50,16 @@ export function confirmationEmail(hasPosted: boolean, freeEditOptin: boolean) {
         p("Hey, Peter here. One of the two people building Cobble."),
         p("You're on the list. That doesn't do much on its own, so here's the part that does:"),
         p(`Reply and tell me which of your recent videos was the worst one to edit, and what specifically made it bad. Not the general "editing takes ages" version, the actual video and the actual part that dragged.`),
-        p("I read all of them. We're picking a small number of creators to run real edits for first, and this is what I go on."),
-        freeEditBlock,
-        p("On timing: Cobble isn't ready, and I'm not going to pretend it's a few weeks away. What I am doing is posting the whole build publicly, every version of the output including the bad ones, at @peter_ishere. That's the fastest way to find out whether this is going to be any good before you ever get access."),
+        p("I read all of them. We're picking a small number of creators to run real creator partnerships with, and this is what I go on."),
+        creatorPartnershipBlock,
+        p("On timing: Cobble isn't ready, and I'm not going to pretend it's a few weeks away. What I am doing is posting the whole build publicly, every version of cobble, at @peter_ishere, @_trycobble, and @buildwsid. That's the fastest way to find out whether this is going to be any good before you ever get access."),
         p("I'll email you when there's something real to use. Roughly once a month otherwise, one paragraph, nothing else."),
         p("Peter"),
       ].join("\n")
     : [
         p("Hey, Peter here, one of the two people building Cobble."),
         p("You're on the list. Straight up though: Cobble is being built for creators already posting regularly and losing hours to editing, so you're early for us rather than the other way round."),
-        p("No ask from me. If you want the interesting part in the meantime, I'm posting the whole build publicly at @peter_ishere, every version of the output, including the bad ones."),
+        p("No ask from me. If you want the interesting part in the meantime, I'm posting the whole build publicly at @peter_ishere, @_trycobble, and @buildwsid, every version of cobble."),
         p("I'll email when there's something real to use."),
         p("Peter"),
       ].join("\n");
@@ -155,8 +155,11 @@ export async function POST(request: Request) {
   }
   const paidFor = asStringArray(body.paid_for);
   if (paidFor !== undefined) record.paid_for = paidFor;
-  const freeEditOptin = typeof body.free_edit_optin === "boolean" ? body.free_edit_optin : undefined;
-  if (freeEditOptin !== undefined) record.free_edit_optin = freeEditOptin;
+  const creatorPartnershipOptin =
+    typeof body.creator_partnership_optin === "boolean" ? body.creator_partnership_optin : undefined;
+  if (creatorPartnershipOptin !== undefined) {
+    record.creator_partnership_optin = creatorPartnershipOptin;
+  }
   const annoyance = asString(body.annoyance);
   if (annoyance !== undefined) record.annoyance = annoyance;
   const source = asString(body.source);
@@ -181,7 +184,8 @@ export async function POST(request: Request) {
     }
 
     // Step 3 (Apply) is the only point where we have both has_posted (step 2)
-    // and free_edit_optin (step 3), which the confirmation email branches on.
+    // and creator_partnership_optin (step 3), which the confirmation email
+    // branches on.
     // confirmation_sent_at guards against sending it twice for the same email.
     if (stepReached === 3) {
       const { data: row, error: selectError } = await supabase
@@ -209,7 +213,7 @@ export async function POST(request: Request) {
           }
 
           const hasPosted = row.has_posted !== false;
-          const { subject, html } = confirmationEmail(hasPosted, freeEditOptin ?? false);
+          const { subject, html } = confirmationEmail(hasPosted, creatorPartnershipOptin ?? false);
 
           // resend.emails.send() resolves with { data, error } instead of
           // throwing on API-level failures (unverified sending domain,

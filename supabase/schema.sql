@@ -24,7 +24,24 @@ alter table waitlist add column if not exists has_posted boolean not null defaul
 
 -- Step 3: final tap question, opt-in, optional free text.
 alter table waitlist add column if not exists paid_for text[];
-alter table waitlist add column if not exists free_edit_optin boolean not null default false;
+
+-- Renamed from free_edit_optin: the checkbox now asks about a creator
+-- partnership, not a free edit. This block preserves existing data on
+-- projects that already had the old column instead of dropping it.
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_name = 'waitlist' and column_name = 'free_edit_optin'
+  ) and not exists (
+    select 1 from information_schema.columns
+    where table_name = 'waitlist' and column_name = 'creator_partnership_optin'
+  ) then
+    alter table waitlist rename column free_edit_optin to creator_partnership_optin;
+  end if;
+end $$;
+alter table waitlist add column if not exists creator_partnership_optin boolean not null default false;
+
 alter table waitlist add column if not exists annoyance text;
 
 -- Funnel / attribution metadata, written on every step's call.

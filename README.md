@@ -19,7 +19,7 @@ Each step posts a flat, partial object to [`app/api/waitlist/route.ts`](app/api/
 
 1. Validates the email and checks a hidden honeypot field.
 2. Upserts it into a `waitlist` table in Supabase, keyed on `email`, using the service role key (server-only; the table has RLS enabled with no public policies, so it can't be written to from the browser). Upsert means each call only touches the columns it sends, so three separate calls build up one row instead of overwriting each other.
-3. On step 3 (Apply), sends one of two confirmation email variants via Resend, once (guarded by `confirmation_sent_at`). The branch reads `has_posted` (set in step 2, from whether "I haven't posted a video yet" was picked in the edit-time question) off the row it just upserted; the free-edit callout paragraph additionally requires `free_edit_optin` from the same step-3 request. If the email send fails, the signup is still kept. Supabase is the source of truth.
+3. On step 3 (Apply), sends one of two confirmation email variants via Resend, once (guarded by `confirmation_sent_at`). The branch reads `has_posted` (set in step 2, from whether "I haven't posted a video yet" was picked in the edit-time question) off the row it just upserted; the creator-partnership callout paragraph additionally requires `creator_partnership_optin` from the same step-3 request. If the email send fails, the signup is still kept. Supabase is the source of truth.
 
 Funnel instrumentation (`page_view`, `step_1_complete`, `step_2_complete`, `form_submit`) is `console.log`-only for now (prefixed `[analytics]`) — there's no analytics library wired up yet.
 
@@ -33,7 +33,7 @@ npm run send-confirmations -- --dry-run   # preview who it would email
 npm run send-confirmations                # actually sends
 ```
 
-This sends to every row where `confirmation_sent_at` is still null, picking the right variant from that row's `has_posted`/`free_edit_optin` columns, regardless of which step they reached. It's safe to re-run: anything that sends successfully gets `confirmation_sent_at` set so it won't be emailed twice.
+This sends to every row where `confirmation_sent_at` is still null, picking the right variant from that row's `has_posted`/`creator_partnership_optin` columns, regardless of which step they reached. It's safe to re-run: anything that sends successfully gets `confirmation_sent_at` set so it won't be emailed twice.
 
 If every send fails with something like *"You can only send testing emails to your own email address"*, your Resend sending domain isn't verified yet — see the Resend section above.
 

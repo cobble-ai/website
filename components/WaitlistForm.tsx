@@ -14,7 +14,7 @@ interface FormState {
   brollSources: string[];
   editTime: string;
   paidFor: string[];
-  freeEditOptin: boolean;
+  creatorPartnershipOptin: boolean;
   annoyance: string;
 }
 
@@ -173,7 +173,7 @@ export default function WaitlistForm() {
     brollSources: [],
     editTime: "",
     paidFor: [],
-    freeEditOptin: false,
+    creatorPartnershipOptin: false,
     annoyance: "",
   });
 
@@ -281,7 +281,7 @@ export default function WaitlistForm() {
         {
           email: form.email,
           paid_for: form.paidFor,
-          free_edit_optin: form.freeEditOptin,
+          creator_partnership_optin: form.creatorPartnershipOptin,
           annoyance: form.annoyance.trim(),
         },
         sourceRef.current,
@@ -546,14 +546,16 @@ export default function WaitlistForm() {
           <label className="flex min-h-11 items-center gap-3 text-sm text-cream">
             <input
               type="checkbox"
-              checked={form.freeEditOptin}
+              checked={form.creatorPartnershipOptin}
               onChange={(event) =>
-                setForm((prev) => ({ ...prev, freeEditOptin: event.target.checked }))
+                setForm((prev) => ({
+                  ...prev,
+                  creatorPartnershipOptin: event.target.checked,
+                }))
               }
               className="h-5 w-5 shrink-0 rounded accent-ember-from"
             />
-            I&apos;d like to be amongst the first to receive early access
-            when it&apos;s ready
+            I&apos;d be open to a creator partnership with Cobble
           </label>
 
           <div className="flex flex-col gap-1.5">
