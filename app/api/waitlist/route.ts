@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { getResend } from "@/lib/resend";
-import {
-  COBBLE_WORDMARK_PNG_BASE64,
-  COBBLE_WORDMARK_WIDTH_2X,
-  COBBLE_WORDMARK_HEIGHT_2X,
-} from "@/lib/wordmark";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -35,12 +30,12 @@ function asString(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-// Body copy is verbatim per spec, including its em dashes. Exported so the
-// backfill script (scripts/send-confirmations.ts) can reuse the exact same
-// templates instead of duplicating them.
+// No em dashes anywhere in this copy, by request. Exported so the backfill
+// script (scripts/send-confirmations.ts) can reuse the exact same templates
+// instead of duplicating them.
 export function confirmationEmail(hasPosted: boolean, freeEditOptin: boolean) {
   const subject = hasPosted
-    ? "You're on the list — one question"
+    ? "You're on the list: one question"
     : "You're on the list";
 
   const p = (text: string) => `<p style="margin:0 0 16px 0;">${text}</p>`;
@@ -54,31 +49,28 @@ export function confirmationEmail(hasPosted: boolean, freeEditOptin: boolean) {
     ? [
         p("Hey, Peter here. One of the two people building Cobble."),
         p("You're on the list. That doesn't do much on its own, so here's the part that does:"),
-        p(`Reply and tell me which of your recent videos was the worst one to edit, and what specifically made it bad. Not the general "editing takes ages" version — the actual video and the actual part that dragged.`),
+        p(`Reply and tell me which of your recent videos was the worst one to edit, and what specifically made it bad. Not the general "editing takes ages" version, the actual video and the actual part that dragged.`),
         p("I read all of them. We're picking a small number of creators to run real edits for first, and this is what I go on."),
         freeEditBlock,
-        p("On timing: Cobble isn't ready, and I'm not going to pretend it's a few weeks away. What I am doing is posting the whole build publicly — every version of the output, including the bad ones — at @peter_ishere. That's the fastest way to find out whether this is going to be any good before you ever get access."),
+        p("On timing: Cobble isn't ready, and I'm not going to pretend it's a few weeks away. What I am doing is posting the whole build publicly, every version of the output including the bad ones, at @peter_ishere. That's the fastest way to find out whether this is going to be any good before you ever get access."),
         p("I'll email you when there's something real to use. Roughly once a month otherwise, one paragraph, nothing else."),
         p("Peter"),
       ].join("\n")
     : [
-        p("Hey, Peter here — one of the two people building Cobble."),
+        p("Hey, Peter here, one of the two people building Cobble."),
         p("You're on the list. Straight up though: Cobble is being built for creators already posting regularly and losing hours to editing, so you're early for us rather than the other way round."),
-        p("No ask from me. If you want the interesting part in the meantime, I'm posting the whole build publicly at @peter_ishere — every version of the output, including the bad ones."),
+        p("No ask from me. If you want the interesting part in the meantime, I'm posting the whole build publicly at @peter_ishere, every version of the output, including the bad ones."),
         p("I'll email when there's something real to use."),
         p("Peter"),
       ].join("\n");
 
   // Table layout with inline styles only: no webfonts, no SVG, no grain
-  // (none of that renders reliably in email clients). The wordmark is a
-  // PNG at 2x so it stays lowercase "cobble" with tight tracking even
-  // where @font-face is stripped (Gmail always strips it). Amber appears
-  // exactly once, as the rule under the wordmark. Everything else is
-  // left-aligned maroon-on-bone body copy, never long copy on a maroon
-  // ground.
-  const wordmarkWidth = Math.round(COBBLE_WORDMARK_WIDTH_2X / 2);
-  const wordmarkHeight = Math.round(COBBLE_WORDMARK_HEIGHT_2X / 2);
-
+  // (none of that renders reliably in email clients). The wordmark is plain
+  // text, not an image: a data-URI <img> showed as a broken-image icon in
+  // testing, so it's gone rather than fixed further. It falls back to the
+  // same system sans stack as the body since Gmail strips @font-face
+  // anyway. The rule under it is maroon, not amber, so it doesn't compete
+  // with the page's one amber accent.
   const html = `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -89,26 +81,20 @@ export function confirmationEmail(hasPosted: boolean, freeEditOptin: boolean) {
   <body style="margin:0;padding:0;background:#EAE0CC;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EAE0CC;">
       <tr>
-        <td align="left" style="padding:0;">
-          <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="left" style="width:600px;max-width:100%;">
+        <td align="center" style="padding:0;">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="width:600px;max-width:100%;">
             <tr>
-              <td style="padding:32px 24px 0 24px;" align="left">
-                <img
-                  src="data:image/png;base64,${COBBLE_WORDMARK_PNG_BASE64}"
-                  width="${wordmarkWidth}"
-                  height="${wordmarkHeight}"
-                  alt="cobble"
-                  style="display:block;border:0;outline:none;"
-                />
+              <td style="padding:32px 24px 0 24px;text-align:center;">
+                <span style="display:inline-block;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;color:#4C1620;">cobble</span>
               </td>
             </tr>
             <tr>
-              <td style="padding:16px 24px 0 24px;">
-                <div style="height:2px;line-height:2px;font-size:2px;background-color:#E8823A;">&nbsp;</div>
+              <td style="padding:16px 24px 0 24px;text-align:center;">
+                <div style="height:2px;line-height:2px;font-size:2px;background-color:#4C1620;margin:0 auto;">&nbsp;</div>
               </td>
             </tr>
             <tr>
-              <td style="padding:24px 24px 40px 24px;text-align:left;color:#4C1620;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;">
+              <td style="padding:24px 24px 40px 24px;text-align:center;color:#4C1620;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;">
                 ${bodyHtml}
               </td>
             </tr>
