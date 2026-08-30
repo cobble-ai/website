@@ -12,10 +12,16 @@
 // RESEND_FROM_EMAIL, RESEND_REPLY_TO_EMAIL in .env.local (same values as
 // Vercel's Production environment).
 
-import "dotenv/config";
+import path from "node:path";
+import { config as loadEnv } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { confirmationEmail } from "../app/api/waitlist/route";
+
+// "dotenv/config" only auto-loads a file literally named .env; Next.js's
+// convention (and .env.example's) is .env.local, so that has to be pointed
+// to explicitly or every var here reads as undefined.
+loadEnv({ path: path.resolve(import.meta.dirname, "../.env.local") });
 
 const DRY_RUN = process.argv.includes("--dry-run");
 
