@@ -21,10 +21,10 @@ interface FormState {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const INPUT_CLASS =
-  "min-h-11 w-full rounded-full border border-cream/25 bg-cream/5 px-5 py-3 text-cream outline-none transition-colors duration-150 focus:border-cream/60 disabled:opacity-60";
+  "min-h-11 w-full rounded-full border border-line bg-white px-5 py-3 text-ink outline-none transition-colors duration-150 focus:border-ink disabled:opacity-60";
 
 const CTA_CLASS =
-  "min-h-11 rounded-full bg-ember-from px-6 py-3 font-medium text-ink transition-opacity duration-150 hover:opacity-90 disabled:opacity-60";
+  "min-h-11 cursor-pointer rounded-full bg-amber px-6 py-3 font-semibold text-ink transition-opacity duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60";
 
 const ARCHIVE_OPTIONS = [
   "The full raw takes",
@@ -126,10 +126,10 @@ function OptionButton({
       type="button"
       onClick={onToggle}
       aria-pressed={selected}
-      className={`min-h-11 w-full rounded-2xl border px-4 py-3 text-left text-sm leading-snug transition-colors duration-150 ${
+      className={`min-h-11 w-full cursor-pointer rounded-2xl border px-4 py-3 text-left text-sm leading-snug transition-colors duration-150 ${
         selected
-          ? "border-transparent bg-ember-from text-ink"
-          : "border-cream/20 bg-cream/5 text-cream hover:border-cream/40"
+          ? "border-transparent bg-ink text-white"
+          : "border-line bg-white text-ink hover:border-ink/25"
       }`}
     >
       {label}
@@ -303,10 +303,10 @@ export default function WaitlistForm() {
     return (
       <div
         role="status"
-        className="mx-auto flex w-full max-w-md flex-col gap-1 rounded-3xl border border-cream/20 bg-cream/5 px-6 py-5 text-center"
+        className="mx-auto flex w-full max-w-md flex-col gap-1 rounded-3xl border border-line bg-card px-6 py-5 text-center"
       >
-        <p className="font-medium text-cream">You&apos;re on the list.</p>
-        <p className="text-sm text-cream/60">
+        <p className="font-semibold text-ink">You&apos;re on the list.</p>
+        <p className="text-sm text-muted">
           {hasPosted
             ? "One thing that'll move you up it: reply to the confirmation email with a link to the last video you posted."
             : "I'll email you when there's something real to use."}
@@ -318,7 +318,7 @@ export default function WaitlistForm() {
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 text-left">
       {(expanded || step > 1) && (
-        <p className="text-xs text-cream/50">Step {step} of 3</p>
+        <p className="text-xs text-muted">Step {step} of 3</p>
       )}
 
       {step === 1 && (
@@ -337,7 +337,7 @@ export default function WaitlistForm() {
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor={emailId}
-              className={expanded ? "text-xs text-cream/50" : "sr-only"}
+              className="sr-only"
             >
               Email <span aria-hidden className="text-lifted">*</span>
             </label>
@@ -361,7 +361,7 @@ export default function WaitlistForm() {
                 aria-invalid={status === "error"}
                 aria-describedby={status === "error" ? errorId : undefined}
                 disabled={status === "saving"}
-                className={`${INPUT_CLASS} placeholder:text-cream/40 flex-1`}
+                className={`${INPUT_CLASS} placeholder:text-muted flex-1`}
               />
               {!expanded && (
                 <button
@@ -378,7 +378,7 @@ export default function WaitlistForm() {
           <ExpandPanel expanded={expanded}>
             <div className="flex flex-col gap-4 pt-1">
               <div className="flex flex-col gap-1.5">
-                <label htmlFor={handleId} className="text-xs text-cream/50">
+                <label htmlFor={handleId} className="text-xs text-muted">
                   Instagram or TikTok handle
                 </label>
                 <input
@@ -397,7 +397,7 @@ export default function WaitlistForm() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor={countryId} className="text-xs text-cream/50">
+                <label htmlFor={countryId} className="text-xs text-muted">
                   Country <span aria-hidden className="text-lifted">*</span>
                 </label>
                 <select
@@ -445,7 +445,7 @@ export default function WaitlistForm() {
       {step === 2 && (
         <div className="flex flex-col gap-6">
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm text-cream">
+            <legend className="mb-2 text-sm text-ink">
               Think about the last video you posted. Which of these could you
               still find on a drive or in your camera roll?
             </legend>
@@ -465,7 +465,7 @@ export default function WaitlistForm() {
           </fieldset>
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm text-cream">
+            <legend className="mb-2 text-sm text-ink">
               Where do your b-roll clips come from right now?
             </legend>
             {BROLL_OPTIONS.map((option) => (
@@ -484,7 +484,7 @@ export default function WaitlistForm() {
           </fieldset>
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm text-cream">
+            <legend className="mb-2 text-sm text-ink">
               How long did your last video take to edit, start to finish?
             </legend>
             {EDIT_TIME_OPTIONS.map((option) => (
@@ -506,7 +506,7 @@ export default function WaitlistForm() {
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="min-h-11 px-2 text-sm text-cream/60 transition-colors duration-150 hover:text-cream"
+              className="min-h-11 px-2 text-sm text-muted transition-colors duration-150 hover:text-ink"
             >
               Back
             </button>
@@ -525,7 +525,7 @@ export default function WaitlistForm() {
       {step === 3 && (
         <div className="flex flex-col gap-6">
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm text-cream">
+            <legend className="mb-2 text-sm text-ink">
               What have you actually paid for to make editing easier?
             </legend>
             {PAID_FOR_OPTIONS.map((option) => (
@@ -543,7 +543,7 @@ export default function WaitlistForm() {
             ))}
           </fieldset>
 
-          <label className="flex min-h-11 items-center gap-3 text-sm text-cream">
+          <label className="flex min-h-11 items-center gap-3 text-sm text-ink">
             <input
               type="checkbox"
               checked={form.creatorPartnershipOptin}
@@ -553,16 +553,16 @@ export default function WaitlistForm() {
                   creatorPartnershipOptin: event.target.checked,
                 }))
               }
-              className="h-5 w-5 shrink-0 rounded accent-ember-from"
+              className="h-5 w-5 shrink-0 rounded accent-ink"
             />
             I&apos;d be open to a creator partnership with Cobble
           </label>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor={annoyanceId} className="text-sm text-cream">
+            <label htmlFor={annoyanceId} className="text-sm text-ink">
               What was the single most annoying thing about editing your last
               video?{" "}
-              <span className="text-cream/50">(optional)</span>
+              <span className="text-muted">(optional)</span>
             </label>
             <textarea
               id={annoyanceId}
@@ -571,7 +571,7 @@ export default function WaitlistForm() {
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, annoyance: event.target.value }))
               }
-              className="w-full rounded-2xl border border-cream/25 bg-cream/5 px-4 py-3 text-cream outline-none transition-colors duration-150 focus:border-cream/60"
+              className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-ink outline-none transition-colors duration-150 focus:border-ink"
             />
           </div>
 
@@ -584,7 +584,7 @@ export default function WaitlistForm() {
               type="button"
               onClick={() => setStep(2)}
               disabled={status === "saving"}
-              className="min-h-11 px-2 text-sm text-cream/60 transition-colors duration-150 hover:text-cream disabled:opacity-60"
+              className="min-h-11 px-2 text-sm text-muted transition-colors duration-150 hover:text-ink disabled:opacity-60"
             >
               Back
             </button>

@@ -1,51 +1,96 @@
-import CobbleField from "@/components/CobbleField";
+import HeroVisual from "@/components/HeroVisual";
 import WaitlistForm from "@/components/WaitlistForm";
+import Link from "next/link";
 
-const reassurances = [
-  "Mostly done before you touch a timeline",
-  "Built from your clips, not a stock catalog",
-  "Fix any cut in seconds. You stay in control",
-];
+const linkClass =
+  "rounded-sm text-sm text-ink underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink";
 
 export default function Home() {
   return (
-    <div className="relative flex min-h-screen flex-1 flex-col">
-      <CobbleField />
-
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-16">
-        <div className="flex w-full max-w-2xl flex-col items-center text-center">
-          <p className="font-display text-xl leading-none tracking-[-0.02em] lowercase">
+    <div className="overflow-x-clip bg-paper text-ink">
+      <header className="w-full">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4 sm:py-5 short:py-3">
+          <Link
+            href="/"
+            className="font-display text-[1.35rem] leading-none font-extrabold tracking-[-0.04em] text-maroon lowercase"
+          >
             cobble
-          </p>
-
-          <div className="mt-2 h-[2px] w-16 bg-ember-from" />
-
-          <h1 className="mt-8 font-display text-5xl leading-[0.98] tracking-[-0.01em] sm:text-6xl md:text-7xl">
-            Edit videos with{" "}
-            <span className="text-ember-from">natural language.</span>
-          </h1>
-
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-cream/70 sm:text-lg">
-            Editing takes up most of your time making videos. Conventional
-            editors are too slow, AI editors are too clunky. Cobble is here to
-            fix that.
-          </p>
-
-          <div className="mt-8 w-full max-w-md">
-            <WaitlistForm />
-          </div>
-
-          <ul className="mt-8 flex flex-col items-center gap-2 text-sm text-cream/50 sm:flex-row sm:gap-6">
-            {reassurances.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
+          </Link>
+          <a
+            href="#waitlist"
+            className="ml-auto inline-flex h-10 shrink-0 items-center rounded-full bg-ink px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:order-3"
+          >
+            Get early access
+          </a>
+          <nav className="flex w-full items-center gap-x-5 gap-y-2 sm:order-2 sm:ml-2 sm:w-auto sm:flex-1">
+            <a href="#why" className={linkClass}>
+              Why we&apos;re building it
+            </a>
+            <a href="#build-log" className={linkClass}>
+              Build log
+            </a>
+          </nav>
         </div>
-      </div>
+      </header>
 
-      <footer className="relative z-10 px-6 pb-8 text-center text-xs text-cream/40">
-        No spam. One email when your seat opens.
-      </footer>
+      <main className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col items-center px-5 pt-4 pb-24 sm:pt-4 short:pt-0">
+        <h1 className="text-center font-display text-[clamp(1.65rem,5.6vw,4.15rem)] leading-[1.02] font-extrabold tracking-[-0.035em] short:text-[min(6vw,9vh)] short:leading-[1]">
+          <span className="block whitespace-nowrap">Edit your reels</span>
+          <span className="block whitespace-nowrap">by just asking.</span>
+        </h1>
+
+        <p className="mt-4 max-w-[36rem] text-center text-base leading-snug text-muted sm:mt-5 sm:text-lg short:mt-2 short:text-base">
+          <span className="sm:block">Import your clips. Say what you want.</span>{" "}
+          <span className="sm:block">Fix anything by hand.</span>
+        </p>
+
+        <div id="waitlist" className="mt-6 w-full max-w-md scroll-mt-8 short:mt-3 short:-mb-4">
+          <WaitlistForm />
+        </div>
+
+        <p className="mt-3 text-center text-[13px] leading-relaxed text-muted short:mt-1">
+          For iPhone. We only email you about Cobble.{" "}
+          <Link
+            href="/privacy"
+            className="text-ink underline decoration-muted/60 underline-offset-2 hover:decoration-ink"
+          >
+            Privacy
+          </Link>
+        </p>
+
+        <div className="mt-8 w-full lg:mt-6 short:mt-4">
+          <HeroVisual />
+        </div>
+
+        <section
+          id="why"
+          className="mx-auto mt-28 w-full max-w-xl scroll-mt-8 text-center"
+        >
+          <h2 className="font-display text-3xl leading-none font-extrabold tracking-[-0.03em]">
+            Why we&apos;re building it
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-muted">
+            Short-form gets edited on an iPhone, usually in CapCut, and the
+            timeline takes the hours. Cobble is a native editor for that job.
+            You import your own clips, then ask for the cut, the captions, the
+            b-roll, or the pace, and you can fix any of it by hand. No stock.
+            Nothing generated.
+          </p>
+        </section>
+
+        <section
+          id="build-log"
+          className="mx-auto mt-16 w-full max-w-xl scroll-mt-8 text-center"
+        >
+          <h2 className="font-display text-3xl leading-none font-extrabold tracking-[-0.03em]">
+            Build log
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-muted">
+            Still pre-launch. Versions go up in public as they&apos;re built, at
+            @peter_ishere, @_trycobble, and @buildwsid.
+          </p>
+        </section>
+      </main>
     </div>
   );
 }

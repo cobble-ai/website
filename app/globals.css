@@ -1,39 +1,122 @@
 @import "tailwindcss";
 
-/* Locked palette: maroon 800, bone 100, amber, lifted maroon. Do not change
-   these values or introduce new hex colors. */
+/* White page, near-black type. Maroon is the wordmark (and tiny accents).
+   Amber is the primary button. Bone is not a page background. */
 @theme {
-  --color-ink: #4c1620;
-  --color-cream: #eae0cc;
-  --color-ember-from: #e8823a;
+  --color-ink: #141414;
+  --color-paper: #ffffff;
+  --color-muted: #5a5a5a;
+  --color-maroon: #4c1620;
+  --color-bone: #eae0cc;
+  --color-amber: #e8823a;
+  --color-line: #e4e4e0;
+  --color-card: #f3f3f1;
   --color-lifted: #b3293f;
-  --radius-none: 0px;
+  --color-ember-from: #e8823a;
 }
 
 @theme inline {
   --font-display: var(--font-bricolage), "Helvetica Neue", Helvetica, Arial,
     sans-serif;
-  --font-sans: var(--font-schibsted), "Helvetica Neue", Helvetica, Arial,
+  --font-sans: var(--font-bricolage), "Helvetica Neue", Helvetica, Arial,
     sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+}
+
+/* Short laptop screens: desktop widths with limited height. */
+@custom-variant short (@media (max-height: 900px) and (min-width: 1024px));
+
+/* Hero visual height. Card and phone share --h. On short screens it is capped
+   so the whole row (grid, prompt, phone and its caption) stays in view. */
+.hero-row {
+  --h: 260px;
+}
+@media (min-width: 1280px) {
+  .hero-row {
+    --h: 300px;
+  }
+}
+@media (max-height: 900px) and (min-width: 1024px) {
+  .hero-row {
+    --h: clamp(150px, calc(100vh - 430px), 260px);
+  }
+}
+@media (max-height: 900px) and (min-width: 1280px) {
+  .hero-row {
+    --h: clamp(150px, calc(100vh - 430px), 300px);
+  }
+}
+
+/* No scrollbar thumb floating beside the hero. Scrolling still works. */
+html {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
 }
 
 ::selection {
-  background: var(--color-ember-from);
+  background: var(--color-amber);
   color: var(--color-ink);
 }
 
-body {
-  background: var(--color-ink);
-  color: var(--color-cream);
-  font-family: var(--font-sans);
+html {
+  scroll-behavior: smooth;
 }
 
-/* Browsers fill autofilled/autocompleted inputs with a light background by
-   default, which clashes with the dark theme. Force our own colors instead. */
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  color-scheme: light;
+}
+
+@keyframes cobble-check {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cobble-check {
+  animation: cobble-check 320ms ease-out both;
+}
+
+@keyframes cobble-caret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.cobble-caret {
+  animation: cobble-caret 1.05s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .cobble-check,
+  .cobble-caret {
+    animation: none;
+  }
+}
+
 input:autofill,
 input:-webkit-autofill {
-  -webkit-text-fill-color: var(--color-cream);
-  caret-color: var(--color-cream);
-  box-shadow: 0 0 0 1000px rgba(234, 224, 204, 0.05) inset;
+  -webkit-text-fill-color: var(--color-ink);
+  caret-color: var(--color-ink);
+  box-shadow: 0 0 0 1000px #ffffff inset;
   transition: background-color 9999s ease-in-out 0s;
 }

@@ -1,21 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Schibsted_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const bricolageGrotesque = Bricolage_Grotesque({
   variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: "800",
+  weight: ["400", "600", "800"],
 });
 
-const schibstedGrotesk = Schibsted_Grotesk({
-  variable: "--font-schibsted",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
-const title = "Cobble: edit videos with natural language";
+const title = "Cobble — edit your reels by just asking";
 const description =
-  "Editing takes up most of your time making videos. Conventional editors are too slow, AI editors are too clunky. Cobble is here to fix that. Join the waitlist.";
+  "Import your clips. Say what you want. Fix anything by hand. Cobble is a native iPhone editor for short-form video. Join the waitlist.";
 
 export const metadata: Metadata = {
   title,
@@ -34,16 +35,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#4C1620",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${bricolageGrotesque.variable} ${schibstedGrotesk.variable} h-full antialiased`}
+      className={`${bricolageGrotesque.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-ink text-cream">
+      <body className="flex min-h-full flex-col bg-paper font-sans text-ink">
         {children}
       </body>
     </html>
