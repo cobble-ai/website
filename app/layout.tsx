@@ -14,9 +14,9 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
-const title = "Cobble — edit your reels by just asking";
+const title = "Cobble: edit your videos in minutes";
 const description =
-  "Import your clips. Say what you want. Fix anything by hand. Cobble is a native iPhone editor for short-form video. Join the waitlist.";
+  "Cobble learns your style and edits the way you would. No more wasting time on editing. A native iPhone editor for short-form video. Join the waitlist.";
 
 export const metadata: Metadata = {
   title,

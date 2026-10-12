@@ -61,8 +61,21 @@ html::-webkit-scrollbar {
   color: var(--color-ink);
 }
 
-html {
-  scroll-behavior: smooth;
+/* In-page links glide via components/SmoothAnchors.tsx (slower than the
+   browser's own smooth scroll), so scroll-behavior stays at its default. */
+
+/* Soft warm wash behind the top of the page, fading to white. */
+.page-glow {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: min(980px, 120vh);
+  pointer-events: none;
+  background:
+    radial-gradient(760px 460px at 12% 6%, #ffd8b4 0, rgba(255, 216, 180, 0) 70%),
+    radial-gradient(720px 440px at 88% 2%, #f8cdd2 0, rgba(248, 205, 210, 0) 70%),
+    radial-gradient(640px 420px at 52% 16%, #ffeacc 0, rgba(255, 234, 204, 0) 70%);
+  -webkit-mask-image: linear-gradient(#000 50%, transparent);
+  mask-image: linear-gradient(#000 50%, transparent);
 }
 
 body {
@@ -102,14 +115,28 @@ body {
   animation: cobble-caret 1.05s steps(1) infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+@keyframes cobble-bar {
+  from {
+    width: 0;
   }
+  to {
+    width: 100%;
+  }
+}
 
+.cobble-bar {
+  animation: cobble-bar 1700ms linear both;
+}
+
+@media (prefers-reduced-motion: reduce) {
   .cobble-check,
   .cobble-caret {
     animation: none;
+  }
+
+  .cobble-bar {
+    animation: none;
+    width: 100%;
   }
 }
 
