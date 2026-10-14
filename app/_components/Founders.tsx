@@ -23,14 +23,14 @@ export default function Founders() {
             className="mt-7 flex"
           >
             <Image
-              src="/founders/founder-1.jpg"
+              src="/hero/founder-1.jpg"
               alt=""
               width={116}
               height={116}
               className="h-[116px] w-[116px] rounded-full border-4 border-white object-cover shadow-[0_6px_18px_-8px_rgba(20,20,20,0.35)]"
             />
             <Image
-              src="/founders/founder-2.jpg"
+              src="/hero/founder-2.jpg"
               alt=""
               width={116}
               height={116}
