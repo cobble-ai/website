@@ -42,9 +42,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${bricolageGrotesque.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-paper font-sans text-ink">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: '(function(){var d=document.documentElement;d.classList.add("js");if(!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){d.classList.add("intro-pending")}})()',
+          }}
+        />
         {children}
       </body>
     </html>

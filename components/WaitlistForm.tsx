@@ -21,10 +21,10 @@ interface FormState {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const INPUT_CLASS =
-  "min-h-11 w-full rounded-full border border-line bg-white px-5 py-3 text-ink outline-none transition-colors duration-150 focus:border-ink disabled:opacity-60";
+  "min-h-14 w-full rounded-full border-[1.5px] border-line bg-white px-8 py-4 text-[1.05rem] text-ink outline-none transition-colors duration-150 focus:border-ink disabled:opacity-60";
 
 const CTA_CLASS =
-  "min-h-11 cursor-pointer rounded-full bg-amber px-6 py-3 font-semibold text-ink transition-opacity duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60";
+  "min-h-14 cursor-pointer rounded-full border-2 border-[#2a0d11] bg-[#f6d5bd] px-10 py-4 text-[1.1rem] font-bold text-[#2a0d11] shadow-[0_0_0_0_#2a0d11] transition-[transform,box-shadow] duration-150 hover:-translate-y-1 hover:shadow-[0_4px_0_0_#2a0d11] active:translate-y-0 active:shadow-none disabled:cursor-not-allowed disabled:opacity-60";
 
 const ARCHIVE_OPTIONS = [
   "The full raw takes",
@@ -318,7 +318,7 @@ export default function WaitlistForm() {
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 text-left">
       {(expanded || step > 1) && (
-        <p className="text-xs text-muted">Step {step} of 3</p>
+        <p className="w-fit inline-block rounded-full bg-[rgba(246,213,189,0.92)] px-3 py-1 text-[#2a0f13] text-xs">Step {step} of 3</p>
       )}
 
       {step === 1 && (
@@ -378,7 +378,7 @@ export default function WaitlistForm() {
           <ExpandPanel expanded={expanded}>
             <div className="flex flex-col gap-4 pt-1">
               <div className="flex flex-col gap-1.5">
-                <label htmlFor={handleId} className="text-xs text-muted">
+                <label htmlFor={handleId} className="w-fit inline-block rounded-full bg-[rgba(246,213,189,0.92)] px-3 py-1 text-[#2a0f13] text-xs">
                   Instagram or TikTok handle
                 </label>
                 <input
@@ -397,7 +397,7 @@ export default function WaitlistForm() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor={countryId} className="text-xs text-muted">
+                <label htmlFor={countryId} className="w-fit inline-block rounded-full bg-[rgba(246,213,189,0.92)] px-3 py-1 text-[#2a0f13] text-xs">
                   Country <span aria-hidden className="text-lifted">*</span>
                 </label>
                 <select

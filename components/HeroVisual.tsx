@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const PROMPT = "cut the pauses, add my b-roll";
 const BREAK_AT = "cut the pauses,".length;
@@ -10,12 +10,40 @@ const TYPE_START = 2000;
 const TYPE_END = 3600;
 const PLAY_AT = 3600;
 
+// Phone reel, in the HTML's order: video, video, then the stills. The videos
+// are the finished reel; the stills are b-roll. Each layer plays for STEP_MS.
+const REEL_STEP_MS = 1700;
+
+// Where each reel video starts, as a fraction of its length. Two layers of the
+// same file start at different points so they show different parts of it.
+const REEL_START: Record<number, number> = { 0: 0, 1: 0.5 };
+function reelStartFraction(index: number) {
+  return REEL_START[index] ?? 0;
+}
+const REEL: { kind: "video" | "image"; src: string }[] = [
+  { kind: "video", src: "/hero/main.mp4" },
+  { kind: "video", src: "/hero/main.mp4" },
+  { kind: "image", src: "/hero/broll-1.jpg" },
+  { kind: "image", src: "/hero/broll-2.jpg" },
+  { kind: "image", src: "/hero/clip-4.jpg" },
+  { kind: "image", src: "/hero/broll-3.jpg" },
+];
+
+const CLIP_SRC = [
+  "/hero/broll-1.jpg",
+  "/hero/clip-2.jpg",
+  "/hero/broll-2.jpg",
+  "/hero/clip-4.jpg",
+  "/hero/broll-3.jpg",
+  "/hero/clip-6.jpg",
+];
+
 const CLIPS: { duration: string; selected: boolean; tone: string }[] = [
   { duration: "0:04", selected: true, tone: "#D5D2CB" },
-  { duration: "0:12", selected: false, tone: "#C5C9C3" },
+  { duration: "0:12", selected: true, tone: "#C5C9C3" },
   { duration: "0:07", selected: true, tone: "#DDD6C8" },
   { duration: "0:21", selected: false, tone: "#C9C3B8" },
-  { duration: "0:09", selected: true, tone: "#D8D8D2" },
+  { duration: "0:09", selected: false, tone: "#D8D8D2" },
   { duration: "0:15", selected: false, tone: "#C3BDB4" },
 ];
 
@@ -118,6 +146,58 @@ export default function HeroVisual() {
       return next;
     });
   const [videoReady, setVideoReady] = useState(false);
+  const [reelIndex, setReelIndex] = useState(0);
+  const reelVideos = useRef<(HTMLVideoElement | null)[]>([]);
+
+  // Start every reel video on mount, not just the first. Muted autoplay is
+  // allowed; this also covers browsers that skip the autoplay attribute.
+  useEffect(() => {
+    reelVideos.current.forEach((node) => {
+      if (!node) return;
+      node.muted = true;
+      void node.play().catch(() => {});
+    });
+  }, []);
+
+  // Each time the reel moves on, play the video that is now on screen and pause
+  // the rest, so every clip in the reel gets its turn.
+  useEffect(() => {
+    REEL.forEach((layer, i) => {
+      const node = reelVideos.current[i];
+      if (!node || layer.kind !== "video") return;
+      if (i === reelIndex) {
+        const start = (reelStartFraction(i) * (node.duration || 0));
+        try {
+          node.currentTime = Number.isFinite(start) ? start : 0;
+        } catch {
+          /* not seekable yet */
+        }
+        void node.play().catch(() => {});
+      } else {
+        node.pause();
+      }
+    });
+  }, [reelIndex]);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(
+      () => setReelIndex((i) => (i + 1) % REEL.length),
+      REEL_STEP_MS,
+    );
+    return () => window.clearInterval(id);
+  }, []);
+
+  useLayoutEffect(() => {
+    const node = videoRef.current;
+    if (!node) return;
+    if (node.readyState >= 2) setVideoReady(true);
+    if (node.paused) {
+      node.play().catch(() => {
+        /* autoplay blocked: the first frame still shows */
+      });
+    }
+  }, []);
 
   useLayoutEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -229,10 +309,10 @@ export default function HeroVisual() {
       */}
       <div
         aria-hidden
-        className="hero-row mx-auto flex w-full flex-col items-center gap-2 lg:w-fit lg:flex-row lg:items-center lg:gap-0"
+        className="hero-row mx-auto flex w-full max-w-[960px] flex-col items-center gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-0"
       >
         {/* A. Camera roll */}
-        <div className="w-full max-w-[360px] rounded-2xl border border-line bg-card p-4 lg:h-[var(--h)] lg:w-[calc(var(--h)*1.5-13px)] lg:max-w-none lg:shrink-0">
+        <div style={{ ["--i" as string]: 0 } as React.CSSProperties} className="rv w-full max-w-[360px] rounded-2xl border border-line bg-card p-4 lg:h-[var(--h)] lg:w-[calc((min(100vw,960px)-96px)*0.42)] lg:max-w-none lg:shrink-0">
           <div className="grid grid-cols-3 grid-rows-2 gap-1.5 lg:h-full">
             {CLIPS.map((clip, index) => {
               const isOn = revealed.has(index);
@@ -244,7 +324,7 @@ export default function HeroVisual() {
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- a missing file stays a labeled tile */}
                   <img
-                    src={`/hero/clip-${index + 1}.jpg`}
+                    src={CLIP_SRC[index]}
                     alt=""
                     draggable={false}
                     className={`absolute inset-0 h-full w-full object-cover ${
@@ -277,12 +357,12 @@ export default function HeroVisual() {
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center justify-center lg:px-2">
+        <div className="flex shrink-0 items-center justify-center lg:px-6">
           <Arrow />
         </div>
 
         {/* B. Prompt */}
-        <div className="relative w-full max-w-[300px] shrink-0 rounded-2xl border border-[#D6D6D2] bg-card p-[18px] lg:w-[300px]">
+        <div style={{ ["--i" as string]: 1 } as React.CSSProperties} className="rv relative w-full max-w-[300px] shrink-0 rounded-2xl border border-[#D6D6D2] bg-card p-[18px] lg:w-[300px]">
           <p className="text-left font-display text-[22px] leading-[1.25] font-semibold tracking-[-0.01em] text-ink">
             <span className="block min-h-[1.25em]">
               {lineOne}
@@ -298,27 +378,48 @@ export default function HeroVisual() {
           </span>
         </div>
 
-        <div className="flex shrink-0 items-center justify-center lg:px-2">
+        <div className="flex shrink-0 items-center justify-center lg:px-6">
           <Arrow />
         </div>
 
         {/* C. Phone */}
-        <div className="aspect-[9/16] w-[min(70vw,300px)] shrink-0 rounded-[1.75rem] bg-ink p-2.5 lg:h-[var(--h)] lg:w-auto">
+        <div style={{ ["--i" as string]: 2 } as React.CSSProperties} className="rv aspect-[9/16] w-[min(70vw,340px)] shrink-0 rounded-[1.75rem] bg-ink p-2.5 lg:h-[calc(var(--h)*1.12)] lg:w-auto lg:-mt-10">
           <div className="relative h-full w-full overflow-hidden rounded-[1.2rem] bg-[#2A2A28]">
-            <video
-              ref={videoRef}
-              className={`absolute inset-0 h-full w-full object-cover ${
-                videoReady ? "opacity-100" : "opacity-0"
-              }`}
-              src="/hero/reel.mp4"
-              muted
-              autoPlay
-              loop
-              playsInline
-              preload="auto"
-              onLoadedData={() => setVideoReady(true)}
-              onError={() => setVideoReady(false)}
-            />
+            {REEL.map((layer, i) =>
+              layer.kind === "video" ? (
+                <video
+                  key={`reel-${i}`}
+                  ref={(node) => {
+                    reelVideos.current[i] = node;
+                    if (i === 0) videoRef.current = node;
+                  }}
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+                    reelIndex === i ? "opacity-100" : "opacity-0"
+                  }`}
+                  src={layer.src}
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                  preload="auto"
+                  onLoadedData={() => setVideoReady(true)}
+                  onCanPlay={() => setVideoReady(true)}
+                  onPlaying={() => setVideoReady(true)}
+                  onError={() => setVideoReady(false)}
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element -- a missing file stays a labeled tile
+                <img
+                  key={`reel-${i}`}
+                  src={layer.src}
+                  alt=""
+                  draggable={false}
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+                    reelIndex === i ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              ),
+            )}
             {!videoReady && (
               <span className="pointer-events-none absolute inset-x-3 top-[42%] text-center font-mono text-[11px] tracking-wide text-[#C8C8C2]">
                 [FINISHED REEL]

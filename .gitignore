@@ -43,3 +43,7 @@ next-env.d.ts
 
 # internal strategy doc; not part of the website, keep out of repo history
 /cobble-core.md
+
+# archived files kept locally, not part of the published site
+/_archive/
+/public/index.html

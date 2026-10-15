@@ -10,7 +10,7 @@ export default function Founders() {
   return (
     <section
       id="founders"
-      className="mt-24 w-full max-w-[960px] scroll-mt-8 border-t border-line pt-16"
+      className="rv w-full max-w-[960px] scroll-mt-8 border-t border-line pt-[clamp(88px,12vw,144px)] pb-[clamp(80px,11vw,128px)]"
     >
       <div className="grid gap-8 md:grid-cols-[1fr_1.3fr] md:gap-14">
         <div>
@@ -53,7 +53,7 @@ export default function Founders() {
             <strong className="font-extrabold text-ink">no</strong> creator has
             to face it again. Follow our journey on:
           </p>
-          <p className="flex flex-wrap gap-2.5 pt-1">
+          <p className="rv flex flex-wrap gap-2.5 pt-1">
             {HANDLES.map((handle) => (
               <a
                 key={handle.href}
