@@ -112,7 +112,7 @@ html::-webkit-scrollbar {
   .doodles .dd { transform: scale(0.62); transform-origin: center; }
   .doodles .dd.d-rec { top: 124px; right: 6%; display: block; z-index: 1; }
   .doodles .dd.d-heart { top: 150px; left: 8%; display: block; }
-  .doodles .dd.d-ig { top: 230px; right: 8%; left: auto; display: block; transform: scale(0.42); transform-origin: top right; }
+  .doodles .dd.d-ig { top: 230px; right: 8%; left: auto; display: block; transform: scale(0.47); transform-origin: top right; }
   .doodles .dd.d-play,
   .doodles .dd.d-strip,
   .doodles .dd.d-bubble,
