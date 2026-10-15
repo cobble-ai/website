@@ -79,7 +79,7 @@ export default function SiteNav() {
         </a>
         <a
           href="#waitlist"
-          className="inline-flex h-[46px] items-center rounded-full bg-maroon px-5 py-[11px] text-[0.96rem] font-semibold text-[#f6eee5] ring-[0.5px] ring-inset ring-[rgba(255,255,255,0.8)] lg:ring-1 shadow-none transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+          className="inline-flex h-[46px] items-center rounded-full bg-maroon px-5 py-[11px] text-[0.96rem] font-semibold text-[#f6eee5] max-lg:ring-[1.5px] max-lg:ring-inset max-lg:ring-[#141414] ring-1 ring-inset ring-[rgba(255,255,255,0.8)] lg:ring-1 shadow-none transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
         >
           Get early access
         </a>

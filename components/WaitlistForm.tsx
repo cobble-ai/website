@@ -129,7 +129,7 @@ function OptionButton({
       className={`min-h-11 w-full cursor-pointer rounded-2xl border px-4 py-3 text-left text-sm leading-snug transition-colors duration-150 ${
         selected
           ? "border-transparent bg-ink text-white"
-          : "border-line bg-white text-ink hover:border-ink/25"
+          : "border-[#141414] bg-[#e9d6c2] text-ink hover:border-ink"
       }`}
     >
       {label}
@@ -445,7 +445,7 @@ export default function WaitlistForm() {
       {step === 2 && (
         <div className="flex flex-col gap-6">
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm text-ink">
+            <legend className="mb-2 inline-block rounded-xl bg-[rgba(246,213,189,0.92)] px-3 py-1.5 text-sm text-[#2a0f13]">
               Think about the last video you posted. Which of these could you
               still find on a drive or in your camera roll?
             </legend>
@@ -465,7 +465,7 @@ export default function WaitlistForm() {
           </fieldset>
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm text-ink">
+            <legend className="mb-2 inline-block rounded-xl bg-[rgba(246,213,189,0.92)] px-3 py-1.5 text-sm text-[#2a0f13]">
               Where do your b-roll clips come from right now?
             </legend>
             {BROLL_OPTIONS.map((option) => (
@@ -484,7 +484,7 @@ export default function WaitlistForm() {
           </fieldset>
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm text-ink">
+            <legend className="mb-2 inline-block rounded-xl bg-[rgba(246,213,189,0.92)] px-3 py-1.5 text-sm text-[#2a0f13]">
               How long did your last video take to edit, start to finish?
             </legend>
             {EDIT_TIME_OPTIONS.map((option) => (
@@ -525,7 +525,7 @@ export default function WaitlistForm() {
       {step === 3 && (
         <div className="flex flex-col gap-6">
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm text-ink">
+            <legend className="mb-2 inline-block rounded-xl bg-[rgba(246,213,189,0.92)] px-3 py-1.5 text-sm text-[#2a0f13]">
               What have you actually paid for to make editing easier?
             </legend>
             {PAID_FOR_OPTIONS.map((option) => (
@@ -559,7 +559,7 @@ export default function WaitlistForm() {
           </label>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor={annoyanceId} className="text-sm text-ink">
+            <label htmlFor={annoyanceId} className="inline-block rounded-xl bg-[rgba(246,213,189,0.92)] px-3 py-1.5 text-sm text-[#2a0f13]">
               What was the single most annoying thing about editing your last
               video?{" "}
               <span className="text-muted">(optional)</span>
