@@ -61,7 +61,7 @@ export default function SiteNav() {
       {/* Floating pill: links + CTA, top-right. */}
       <nav
         aria-label="Primary"
-        className={`nav-load pointer-events-auto absolute top-3 right-3 flex items-center gap-[22px] rounded-full border-[0.5px] border-[rgba(20,20,20,0.08)] bg-[rgba(255,255,255,0.92)] max-sm:border-[0.5px] max-sm:border-[rgba(20,20,20,0.08)] max-sm:shadow-[0_8px_22px_-14px_rgba(20,20,20,0.3)] py-[7px] pr-[7px] pl-6 shadow-[0_8px_22px_-14px_rgba(20,20,20,0.3)] transition-[transform,opacity] duration-500 sm:top-4 sm:right-6 ${
+        className={`nav-load pointer-events-auto absolute top-3 right-3 flex items-center gap-[22px] rounded-full border-[0.5px] border-[rgba(20,20,20,0.08)] bg-[rgba(255,255,255,0.92)] max-lg:border-0 max-lg:bg-transparent max-lg:shadow-none max-lg:p-0 py-[7px] pr-[7px] pl-6 shadow-[0_8px_22px_-14px_rgba(20,20,20,0.3)] transition-[transform,opacity] duration-500 sm:top-4 sm:right-6 ${
           hidden || compact ? "pointer-events-none -translate-y-6 scale-[0.97] opacity-0" : "translate-y-0 opacity-100"
         }`}
       >

@@ -28,10 +28,10 @@ export default function Home() {
       <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col items-center px-7 sm:px-5 pt-[clamp(180px,22vw,260px)] pb-24 short:pt-[180px]">
         <h1 className="rvh m-0 mx-auto w-full -translate-x-[2%] text-center font-display text-[clamp(2.9rem,9vw,5.9rem)] leading-[0.95] font-extrabold tracking-[-0.04em]">
           <span className="block w-full whitespace-nowrap text-center">
-            <span className="hl w">Edit</span> <span className="hl w">your</span> <span className="hl w">videos</span>
+            <span className="hl w" style={{ ["--i" as string]: 0 } as React.CSSProperties}>Edit</span> <span className="hl w" style={{ ["--i" as string]: 1 } as React.CSSProperties}>your</span> <span className="hl w" style={{ ["--i" as string]: 2 } as React.CSSProperties}>videos</span>
           </span>
           <span className="block w-full whitespace-nowrap text-center">
-            <span className="hl w">in</span> <span className="hl w">minutes.</span>
+            <span className="hl w" style={{ ["--i" as string]: 3 } as React.CSSProperties}>in</span> <span className="hl w" style={{ ["--i" as string]: 4 } as React.CSSProperties}>minutes.</span>
           </span>
         </h1>
 
