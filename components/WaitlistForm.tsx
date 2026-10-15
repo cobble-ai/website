@@ -21,10 +21,10 @@ interface FormState {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const INPUT_CLASS =
-  "min-h-14 w-full rounded-full border-[1.5px] border-line bg-white px-8 py-4 text-[1.05rem] text-ink outline-none transition-colors duration-150 focus:border-ink disabled:opacity-60";
+  "min-h-14 max-sm:min-h-12 w-full rounded-full border-[1.5px] border-line bg-white px-8 max-sm:px-5 py-4 max-sm:py-3 text-[1.05rem] max-sm:text-base text-ink outline-none transition-colors duration-150 focus:border-ink disabled:opacity-60";
 
 const CTA_CLASS =
-  "min-h-14 cursor-pointer rounded-full border-2 border-[#2a0d11] bg-[#f6d5bd] px-10 py-4 text-[1.1rem] font-bold text-[#2a0d11] shadow-[0_0_0_0_#2a0d11] transition-[transform,box-shadow] duration-150 hover:-translate-y-1 hover:shadow-[0_4px_0_0_#2a0d11] active:translate-y-0 active:shadow-none disabled:cursor-not-allowed disabled:opacity-60";
+  "min-h-14 max-sm:min-h-12 cursor-pointer rounded-full border-2 border-[#2a0d11] bg-[#f6d5bd] px-10 max-sm:px-6 py-4 max-sm:py-3 text-[1.1rem] max-sm:text-base font-bold text-[#2a0d11] shadow-[0_0_0_0_#2a0d11] transition-[transform,box-shadow] duration-150 hover:-translate-y-1 hover:shadow-[0_4px_0_0_#2a0d11] active:translate-y-0 active:shadow-none disabled:cursor-not-allowed disabled:opacity-60";
 
 const ARCHIVE_OPTIONS = [
   "The full raw takes",
@@ -369,7 +369,7 @@ export default function WaitlistForm() {
                   onClick={expand}
                   className={`${CTA_CLASS} shrink-0 sm:w-auto`}
                 >
-                  Join the waitlist
+                  Join cobble now
                 </button>
               )}
             </div>

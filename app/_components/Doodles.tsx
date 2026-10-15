@@ -8,7 +8,7 @@ const STICKERS = [
 
 export default function Doodles() {
   return (
-    <div aria-hidden="true" className="doodles pointer-events-none absolute inset-x-0 top-0 h-[460px] lg:block">
+    <div aria-hidden="true" className="doodles pointer-events-none absolute inset-x-0 top-0 hidden">
       <div className="dd d-play rv rv-sticker" style={{ ["--i" as string]: 0 } as React.CSSProperties}>
         <svg width="62" height="62" viewBox="0 0 64 64" fill="none" className="dd-in">
           <rect x="4" y="8" width="56" height="48" rx="14" fill="#B4636D" stroke="#141414" strokeWidth="3" />

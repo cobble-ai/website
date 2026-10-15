@@ -108,7 +108,7 @@ html::-webkit-scrollbar {
 @media (max-width: 1023px) {
   /* Phones and tablets: REC plus two other stickers, placed clear of the
      headline, subtext and form. Everything else is hidden. */
-  .doodles { display: block; height: 560px; }
+  .doodles { display: none; }
   .doodles .dd { transform: scale(0.62); transform-origin: center; }
   .doodles .dd.d-rec { top: 124px; right: 6%; display: block; z-index: 1; }
   .doodles .dd.d-heart { top: 150px; left: 8%; display: block; }

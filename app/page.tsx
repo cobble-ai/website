@@ -26,7 +26,7 @@ export default function Home() {
 
 
       <main className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col items-center px-7 sm:px-5 pt-[clamp(180px,22vw,260px)] pb-24 short:pt-[180px]">
-        <h1 className="rvh m-0 mx-auto w-full -translate-x-[2%] text-center font-display text-[clamp(2.9rem,9vw,5.9rem)] leading-[0.95] font-extrabold tracking-[-0.04em]">
+        <h1 className="rvh m-0 mx-auto w-full -translate-x-[2%] text-center font-display text-[clamp(2.3rem,9vw,5.9rem)] max-sm:text-[2.3rem] leading-[0.95] font-extrabold tracking-[-0.04em]">
           <span className="block w-full whitespace-nowrap text-center">
             <span className="hl w" style={{ ["--i" as string]: 0 } as React.CSSProperties}>Edit</span> <span className="hl w" style={{ ["--i" as string]: 1 } as React.CSSProperties}>your</span> <span className="hl w" style={{ ["--i" as string]: 2 } as React.CSSProperties}>videos</span>
           </span>
@@ -35,18 +35,18 @@ export default function Home() {
           </span>
         </h1>
 
-        <p style={{ ["--i" as string]: 4 } as React.CSSProperties} className="rv mx-auto mt-[22px] mb-[30px] max-w-[30rem] text-center text-[clamp(1.08rem,2vw,1.25rem)] font-medium text-[#f6e8d8] [text-shadow:0_1px_12px_rgba(30,8,12,0.5)]">
+        <p style={{ ["--i" as string]: 4 } as React.CSSProperties} className="rv mx-auto mt-[22px] mb-[30px] max-w-[30rem] text-center text-[clamp(1.08rem,2vw,1.25rem)] max-sm:text-[0.98rem] max-sm:mt-4 max-sm:mb-6 font-medium text-[#f6e8d8] [text-shadow:0_1px_12px_rgba(30,8,12,0.5)]">
           <span className="sm:block">
-            Cobble learns your style and edits the way you would.
+            I learn your style and edit the way you would.
           </span>
         </p>
 
-        <div id="waitlist" style={{ ["--i" as string]: 5 } as React.CSSProperties} className="rv w-full max-w-[640px] scroll-mt-8">
+        <div id="waitlist" style={{ ["--i" as string]: 5 } as React.CSSProperties} className="rv w-full max-w-[640px] max-sm:max-w-full scroll-mt-8">
           <WaitlistForm />
         </div>
 
         <p style={{ ["--i" as string]: 6 } as React.CSSProperties} className="rv mt-4 text-center text-[0.9rem] leading-normal text-[#f6d5bd]">
-          For iPhone. We only email you about Cobble.{" "}
+          Don't worry, I won't spam your iPhone.{" "}
           <Link
             href="/privacy"
             className="text-[#f6d5bd] underline decoration-[#f6d5bd] underline-offset-2 hover:decoration-[#f6d5bd]/70"
@@ -55,7 +55,7 @@ export default function Home() {
           </Link>
         </p>
 
-        <div className="mt-[180px] w-full">
+        <div className="mt-[180px] max-sm:mt-12 w-full">
           <HeroVisual />
         </div>
 
