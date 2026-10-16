@@ -41,30 +41,7 @@ export default function Home() {
           </span>
         </p>
 
-        <div id="waitlist" style={{ ["--i" as string]: 5 } as React.CSSProperties} className="rv relative w-full max-w-[640px] max-sm:max-w-full scroll-mt-8">
-          {/* Green arrow pointing down at the "Join cobble now" button */}
-          <svg
-            aria-hidden="true"
-            width="46"
-            height="62"
-            viewBox="0 0 46 62"
-            fill="none"
-            className="pointer-events-none absolute -top-14 right-[18%] max-sm:right-[12%] max-sm:-top-12 rotate-[10deg]"
-          >
-            <path
-              d="M22 2 C 24 22, 18 36, 22 52"
-              stroke="#22a04b"
-              strokeWidth="4"
-              strokeLinecap="round"
-            />
-            <path
-              d="M11 42 L22 56 L33 42"
-              stroke="#22a04b"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <div id="waitlist" style={{ ["--i" as string]: 5 } as React.CSSProperties} className="rv w-full max-w-[640px] max-sm:max-w-full scroll-mt-8">
           <WaitlistForm />
         </div>
 
