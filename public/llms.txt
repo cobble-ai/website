@@ -1,0 +1,35 @@
+# Cobble
+
+> Cobble is an AI video editor for solo content creators. It learns how you edit, then edits your next short-form videos the way you would: cutting dead air, picking your best takes, adding your B-roll and music. Cobble is currently in early access (waitlist).
+
+Cobble is built for creators who make short-form video for Instagram Reels, TikTok and YouTube Shorts. Editing a single reel often takes hours, and most AI editors produce generic, sloppy results. Cobble is different because it adapts to each creator's own editing style instead of applying the same template to everyone.
+
+## Key features
+
+- Learns your style: studies how you edit so its edits match your pacing, cuts and look
+- Cuts dead air: removes pauses, silences and filler automatically
+- Selects your best takes: finds the strongest take when you record multiple attempts
+- Adds your B-roll: places your B-roll clips where they fit
+- Natural language editing: tell Cobble what you want in plain words and it makes the edit
+
+## Who it's for
+
+- Solo creators making short-form video (Reels, TikTok, Shorts)
+- Talking-head, vlog, gaming and educational creators
+- Creators who want to spend less time editing and more time creating
+
+## Status and pricing
+
+- Stage: early access, join the waitlist at https://www.cobble.video
+- Pricing: not yet announced
+
+## Company
+
+- Founded in 2026 by Sid and Peter
+- Instagram: https://www.instagram.com/_trycobble
+- Founders: Sid (https://www.instagram.com/buildwsid), Peter (https://www.instagram.com/peter__ishere)
+
+## Pages
+
+- [Home and waitlist](https://www.cobble.video): what Cobble does and how to get early access
+- [Privacy policy](https://www.cobble.video/privacy): how Cobble handles user data
