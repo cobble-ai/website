@@ -101,6 +101,10 @@ export default function Home() {
       </main>
 
       <footer className="rv relative z-10 border-t border-line">
+        <p className="mx-auto w-full max-w-[960px] px-5 pt-6 text-sm leading-relaxed text-ink">
+          Cobble is an AI video editor that learns your style and edits your Reels, TikToks and Shorts the way you
+          would. Join the waitlist for early access.
+        </p>
         <div className="mx-auto flex w-full max-w-[960px] flex-wrap justify-between gap-3 px-5 py-6 text-sm text-muted">
           <span>Cobble</span>
           <Link
