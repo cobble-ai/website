@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { COUNTRIES } from "@/lib/countries";
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | "choice";
 type SaveStatus = "idle" | "saving" | "error";
 
 interface FormState {
@@ -236,7 +236,7 @@ export default function WaitlistForm() {
       setForm((prev) => ({ ...prev, email, handle, country }));
       track("step_1_complete", { step: 1 });
       setStatus("idle");
-      setStep(2);
+      setStep("choice");
     } catch (err) {
       setStatus("error");
       setErrorMessage(
@@ -299,25 +299,20 @@ export default function WaitlistForm() {
   };
 
   if (submitted) {
-    const hasPosted = form.editTime !== NOT_POSTED_OPTION;
     return (
       <div
         role="status"
         className="mx-auto flex w-full max-w-md flex-col gap-1 rounded-3xl border border-line bg-card px-6 py-5 text-center"
       >
         <p className="font-semibold text-ink">You&apos;re on the list.</p>
-        <p className="text-sm text-muted">
-          {hasPosted
-            ? "One thing that'll move you up it: reply to the confirmation email with a link to the last video you posted."
-            : "I'll email you when there's something real to use."}
-        </p>
+        <p className="text-sm text-muted">See you when we launch!</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 text-left">
-      {(expanded || step > 1) && (
+      {(expanded || (step !== 1 && step !== "choice")) && (
         <p className="w-fit inline-block rounded-full bg-[rgba(246,213,189,0.92)] px-3 py-1 text-[#2a0f13] text-xs">Step {step} of 3</p>
       )}
 
@@ -442,6 +437,31 @@ export default function WaitlistForm() {
         </form>
       )}
 
+      {step === "choice" && (
+        <div className="flex flex-col gap-6">
+          <p className="inline-block rounded-xl bg-[rgba(246,213,189,0.92)] px-3 py-1.5 text-sm text-[#2a0f13]">
+            Would you like to answer some extra questions?
+          </p>
+          <p className="text-sm text-[#f6d5bd]">Totally optional. You can skip this and still be on the list.</p>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setSubmitted(true)}
+              className={`${CTA_CLASS} flex-1`}
+            >
+              No thanks
+            </button>
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className={`${CTA_CLASS} flex-1`}
+            >
+              Yes, sure
+            </button>
+          </div>
+        </div>
+      )}
+
       {step === 2 && (
         <div className="flex flex-col gap-6">
           <fieldset className="flex flex-col gap-2">
@@ -505,7 +525,7 @@ export default function WaitlistForm() {
           <div className="flex items-center justify-between gap-4">
             <button
               type="button"
-              onClick={() => setStep(1)}
+              onClick={() => setStep("choice")}
               className="min-h-11 px-2 text-sm text-muted transition-colors duration-150 hover:text-ink"
             >
               Back
