@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 const PROMPT = "cut the pauses, add my b-roll";
 const BREAK_AT = "cut the pauses,".length;
@@ -125,24 +125,10 @@ export default function HeroVisual() {
     });
   const [videoReady, setVideoReady] = useState(false);
 
-  // Muted autoplay is allowed; play the reel video on mount, and again if the
-  // browser paused it, so the reel runs continuously from the start.
-  useEffect(() => {
-    const node = videoRef.current;
-    if (!node) return;
-    node.muted = true;
-    void node.play().catch(() => {});
-  }, []);
-
   useLayoutEffect(() => {
     const node = videoRef.current;
     if (!node) return;
     if (node.readyState >= 2) setVideoReady(true);
-    if (node.paused) {
-      node.play().catch(() => {
-        /* autoplay blocked: the first frame still shows */
-      });
-    }
   }, []);
 
   useLayoutEffect(() => {
@@ -153,11 +139,6 @@ export default function HeroVisual() {
     const showFinal = () => {
       setShown(SELECTED_INDEXES.length);
       setChars(PROMPT.length);
-      const node = videoRef.current;
-      if (!node) return;
-      node.muted = true;
-      node.loop = true;
-      void node.play().catch(() => {});
     };
 
     // Replays the finished state: it holds for a moment on load, then the
@@ -227,12 +208,15 @@ export default function HeroVisual() {
     let started = false;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (started || !entries.some((entry) => entry.isIntersecting)) return;
+        // Start only once the visual is fully on screen, so a visual that is
+        // partly visible at load does not start early.
+        if (started || !entries.some((entry) => entry.intersectionRatio >= 0.98)) return;
         started = true;
         observer.disconnect();
+        videoRef.current?.play().catch(() => {});
         apply();
       },
-      { threshold: 0.35 },
+      { threshold: [0, 0.98, 1] },
     );
     if (root) observer.observe(root);
     else apply();
@@ -351,7 +335,6 @@ export default function HeroVisual() {
               className="absolute inset-0 h-full w-full object-cover"
               src={REEL_SRC}
               muted
-              autoPlay
               loop
               playsInline
               preload="auto"
