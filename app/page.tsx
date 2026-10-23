@@ -67,11 +67,25 @@ export default function Home() {
               Most solo creators <span className="text-lifted whitespace-nowrap">waste hours</span>
               <br className="max-sm:hidden" /> editing reels.
             </h2>
-            <p className="mt-6 max-w-[34rem] text-[clamp(1.08rem,1.6vw,1.25rem)] leading-relaxed text-muted">
-              Cobble learns how you cut, pace and caption, then assembles your
-              next edit the way you would. The boring parts take minutes, not
-              hours.
-            </p>
+            {/* Sticker-style answer to the headline: same outline + hard shadow as the CTAs.
+                Hover (or tap/focus on phones) shows the time-saving claim. */}
+            <div tabIndex={0} className="group relative mt-[clamp(32px,4vw,48px)] rounded-full outline-none">
+              <p className="inline-flex -rotate-2 cursor-default items-center gap-3 rounded-full border-2 border-[#2a0d11] bg-amber py-3 pr-7 pl-4 font-display text-[clamp(1.2rem,2.4vw,1.7rem)] leading-none font-extrabold tracking-[-0.03em] text-[#2a0d11] shadow-[0_5px_0_0_#2a0d11] transition-[rotate] duration-300 group-hover:rotate-0 group-focus:rotate-0">
+                <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-[#2a0d11] bg-lifted text-bone">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1.5l1.6 4.2 4.4.3-3.4 2.8 1.1 4.3L8 10.7l-3.7 2.4 1.1-4.3L2 6l4.4-.3L8 1.5z" fill="currentColor" />
+                  </svg>
+                </span>
+                Cobble’s here to fix that.
+              </p>
+              <span
+                role="tooltip"
+                className="pointer-events-none absolute top-full left-1/2 z-20 mt-5 w-[min(300px,80vw)] -translate-x-1/2 translate-y-2 rounded-2xl bg-[#2a0d11] px-5 py-3.5 text-center text-[0.98rem] leading-snug font-semibold text-bone opacity-0 shadow-[0_14px_30px_-12px_rgba(42,13,17,0.7)] transition-[opacity,translate] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100"
+              >
+                <span aria-hidden className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] bg-[#2a0d11]" />
+                Cobble handles the boring work, so you can focus on the creative part.
+              </span>
+            </div>
           </div>
           <Compare />
         </section>
