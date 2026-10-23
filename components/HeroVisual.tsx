@@ -12,22 +12,8 @@ const PLAY_AT = 3600;
 
 // Phone reel, in the HTML's order: video, video, then the stills. The videos
 // are the finished reel; the stills are b-roll. Each layer plays for STEP_MS.
-const REEL_STEP_MS = 1700;
-
-// Where each reel video starts, as a fraction of its length. Two layers of the
-// same file start at different points so they show different parts of it.
-const REEL_START: Record<number, number> = { 0: 0, 1: 0.5 };
-function reelStartFraction(index: number) {
-  return REEL_START[index] ?? 0;
-}
-const REEL: { kind: "video" | "image"; src: string }[] = [
-  { kind: "video", src: "/hero/main.mp4" },
-  { kind: "video", src: "/hero/main.mp4" },
-  { kind: "image", src: "/hero/broll-1.jpg" },
-  { kind: "image", src: "/hero/broll-2.jpg" },
-  { kind: "image", src: "/hero/clip-4.jpg" },
-  { kind: "image", src: "/hero/broll-3.jpg" },
-];
+// The phone shows one continuous playthrough of the finished reel.
+const REEL_SRC = "/hero/main.mp4";
 
 const CLIP_SRC = [
   "/hero/broll-1.jpg",
@@ -51,14 +37,6 @@ const SELECTED_INDEXES = CLIPS.flatMap((clip, index) =>
   clip.selected ? [index] : [],
 );
 
-function resetVideo(node: HTMLVideoElement) {
-  node.pause();
-  try {
-    node.currentTime = 0;
-  } catch {
-    /* not seekable yet */
-  }
-}
 
 function CheckIcon() {
   return (
@@ -146,46 +124,14 @@ export default function HeroVisual() {
       return next;
     });
   const [videoReady, setVideoReady] = useState(false);
-  const [reelIndex, setReelIndex] = useState(0);
-  const reelVideos = useRef<(HTMLVideoElement | null)[]>([]);
 
-  // Start every reel video on mount, not just the first. Muted autoplay is
-  // allowed; this also covers browsers that skip the autoplay attribute.
+  // Muted autoplay is allowed; play the reel video on mount, and again if the
+  // browser paused it, so the reel runs continuously from the start.
   useEffect(() => {
-    reelVideos.current.forEach((node) => {
-      if (!node) return;
-      node.muted = true;
-      void node.play().catch(() => {});
-    });
-  }, []);
-
-  // Each time the reel moves on, play the video that is now on screen and pause
-  // the rest, so every clip in the reel gets its turn.
-  useEffect(() => {
-    REEL.forEach((layer, i) => {
-      const node = reelVideos.current[i];
-      if (!node || layer.kind !== "video") return;
-      if (i === reelIndex) {
-        const start = (reelStartFraction(i) * (node.duration || 0));
-        try {
-          node.currentTime = Number.isFinite(start) ? start : 0;
-        } catch {
-          /* not seekable yet */
-        }
-        void node.play().catch(() => {});
-      } else {
-        node.pause();
-      }
-    });
-  }, [reelIndex]);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = window.setInterval(
-      () => setReelIndex((i) => (i + 1) % REEL.length),
-      REEL_STEP_MS,
-    );
-    return () => window.clearInterval(id);
+    const node = videoRef.current;
+    if (!node) return;
+    node.muted = true;
+    void node.play().catch(() => {});
   }, []);
 
   useLayoutEffect(() => {
@@ -223,13 +169,15 @@ export default function HeroVisual() {
         node.loop = true;
       }
 
-      // Begin the clock already at the finished state.
-      const started = performance.now() - PLAY_AT;
+      // Start the clock at zero so the checks, typing and reel play through once.
+      const started = performance.now();
       let phasePlaying = false;
 
       const frame = (now: number) => {
         if (stopped) return;
-        const elapsed = (now - started) % LOOP_MS;
+        // Run one pass through the timeline, then hold the final state instead
+        // of wrapping back to the start.
+        const elapsed = Math.min(now - started, LOOP_MS);
         const nextShown = CHECK_AT.filter((time) => elapsed >= time).length;
         let nextChars = 0;
         if (elapsed >= TYPE_END) nextChars = PROMPT.length;
@@ -256,9 +204,6 @@ export default function HeroVisual() {
             }
             void video.play().catch(() => {});
             phasePlaying = true;
-          } else if (!shouldPlay && phasePlaying) {
-            resetVideo(video);
-            phasePlaying = false;
           }
         } else if (elapsed < PLAY_AT) {
           phasePlaying = false;
@@ -276,11 +221,27 @@ export default function HeroVisual() {
       else startLoop();
     };
 
-    apply();
+    // Only start the animation once the visual scrolls into view, so the user
+    // sees it play rather than finding it already finished.
+    const root = document.getElementById("hero-visual");
+    let started = false;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (started || !entries.some((entry) => entry.isIntersecting)) return;
+        started = true;
+        observer.disconnect();
+        apply();
+      },
+      { threshold: 0.35 },
+    );
+    if (root) observer.observe(root);
+    else apply();
+
     media.addEventListener("change", apply);
 
     return () => {
       stopped = true;
+      observer.disconnect();
       window.cancelAnimationFrame(raf);
       media.removeEventListener("change", apply);
     };
@@ -385,41 +346,20 @@ export default function HeroVisual() {
         {/* C. Phone */}
         <div style={{ ["--i" as string]: 2 } as React.CSSProperties} className="rv aspect-[9/16] w-[min(70vw,340px)] shrink-0 rounded-[1.75rem] bg-ink p-2.5 lg:h-[calc(var(--h)*1.12)] lg:w-auto lg:-mt-10">
           <div className="relative h-full w-full overflow-hidden rounded-[1.2rem] bg-[#2A2A28]">
-            {REEL.map((layer, i) =>
-              layer.kind === "video" ? (
-                <video
-                  key={`reel-${i}`}
-                  ref={(node) => {
-                    reelVideos.current[i] = node;
-                    if (i === 0) videoRef.current = node;
-                  }}
-                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                    reelIndex === i ? "opacity-100" : "opacity-0"
-                  }`}
-                  src={layer.src}
-                  muted
-                  autoPlay
-                  loop
-                  playsInline
-                  preload="auto"
-                  onLoadedData={() => setVideoReady(true)}
-                  onCanPlay={() => setVideoReady(true)}
-                  onPlaying={() => setVideoReady(true)}
-                  onError={() => setVideoReady(false)}
-                />
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element -- a missing file stays a labeled tile
-                <img
-                  key={`reel-${i}`}
-                  src={layer.src}
-                  alt=""
-                  draggable={false}
-                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                    reelIndex === i ? "opacity-100" : "opacity-0"
-                  }`}
-                />
-              ),
-            )}
+            <video
+              ref={videoRef}
+              className="absolute inset-0 h-full w-full object-cover"
+              src={REEL_SRC}
+              muted
+              autoPlay
+              loop
+              playsInline
+              preload="auto"
+              onLoadedData={() => setVideoReady(true)}
+              onCanPlay={() => setVideoReady(true)}
+              onPlaying={() => setVideoReady(true)}
+              onError={() => setVideoReady(false)}
+            />
             {!videoReady && (
               <span className="pointer-events-none absolute inset-x-3 top-[42%] text-center font-mono text-[11px] tracking-wide text-[#C8C8C2]">
                 [FINISHED REEL]
