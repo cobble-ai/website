@@ -153,6 +153,7 @@ export default function HeroVisual() {
       // Start the clock at zero so the checks, typing and reel play through once.
       const started = performance.now();
       let phasePlaying = false;
+      let reelStarted = false;
 
       const frame = (now: number) => {
         if (stopped) return;
@@ -178,10 +179,15 @@ export default function HeroVisual() {
         if (video && video.readyState >= 2 && video.error == null) {
           const shouldPlay = elapsed >= PLAY_AT;
           if (shouldPlay && !phasePlaying) {
-            try {
-              video.currentTime = 0;
-            } catch {
-              /* not seekable yet */
+            // Rewind only on the very first start. Later passes through the
+            // timeline must not seek the reel back, or it restarts and cuts.
+            if (!reelStarted) {
+              try {
+                video.currentTime = 0;
+              } catch {
+                /* not seekable yet */
+              }
+              reelStarted = true;
             }
             void video.play().catch(() => {});
             phasePlaying = true;
