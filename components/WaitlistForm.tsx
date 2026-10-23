@@ -364,7 +364,7 @@ export default function WaitlistForm() {
                   onClick={expand}
                   className={`${CTA_CLASS} shrink-0 sm:w-auto`}
                 >
-                  Join cobble now
+                  Get early access
                 </button>
               )}
             </div>

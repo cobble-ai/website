@@ -1,6 +1,7 @@
 import Features from "./_components/Features";
 import Founders from "./_components/Founders";
 import FAQ from "./_components/FAQ";
+import Compare from "./_components/Compare";
 import IntroAnimation from "@/components/IntroAnimation";
 import HeroVisual from "@/components/HeroVisual";
 import SmoothAnchors from "./_components/SmoothAnchors";
@@ -19,6 +20,7 @@ export default function Home() {
       <IntroAnimation />
       <SmoothAnchors />
       <div aria-hidden className="page-glow" />
+      <div aria-hidden className="page-glow-bottom" />
 
       <SiteNav />
       <Doodles />
@@ -46,7 +48,7 @@ export default function Home() {
         </div>
 
         <p style={{ ["--i" as string]: 6 } as React.CSSProperties} className="rv mt-4 text-center text-[0.9rem] leading-normal text-[#f6d5bd]">
-          Don't worry, I won't spam your iPhone.{" "}
+          Free during early access. No spam, ever.{" "}
           <Link
             href="/privacy"
             className="text-[#f6d5bd] underline decoration-[#f6d5bd] underline-offset-2 hover:decoration-[#f6d5bd]/70"
@@ -60,24 +62,18 @@ export default function Home() {
         </div>
 
         <section id="why" className="rv relative w-full max-w-[960px] scroll-mt-8 pt-[clamp(72px,9vw,112px)] pb-[clamp(16px,2vw,28px)]">
-          <div aria-hidden className="why-glow" />
-          <div className="grid gap-6 md:grid-cols-[1.1fr_1fr] md:gap-14">
-            <h2 className="font-display text-[clamp(2rem,5.2vw,3.5rem)] leading-[0.98] font-extrabold tracking-[-0.035em]">
-              Most solo creators <span className="text-lifted whitespace-nowrap">waste hours</span>{" "}
-              editing reels.
+          <div className="mx-auto flex max-w-[760px] flex-col items-center text-center">
+            <h2 className="font-display text-[clamp(2.2rem,5.6vw,4rem)] leading-[0.98] font-extrabold tracking-[-0.04em]">
+              Most solo creators <span className="text-lifted whitespace-nowrap">waste hours</span>
+              <br className="max-sm:hidden" /> editing reels.
             </h2>
-            <div className="space-y-4 text-lg leading-relaxed text-muted">
-              <p>
-                Cobble learns how you cut, pace and caption, then assembles your
-                next edit the way you would. The boring parts take minutes, not
-                hours.
-              </p>
-              <p>
-                And because it edits like you, you skip the AI slop: no generic
-                cuts, no template look, just reels that still feel like yours.
-              </p>
-            </div>
+            <p className="mt-6 max-w-[34rem] text-[clamp(1.08rem,1.6vw,1.25rem)] leading-relaxed text-muted">
+              Cobble learns how you cut, pace and caption, then assembles your
+              next edit the way you would. The boring parts take minutes, not
+              hours.
+            </p>
           </div>
+          <Compare />
         </section>
 
         <Features />
@@ -86,26 +82,26 @@ export default function Home() {
 
         <section
           id="get-early-access"
-          className="rv flex w-full max-w-[960px] scroll-mt-8 flex-col items-center border-t border-line pt-[clamp(88px,13vw,160px)] pb-[clamp(96px,13vw,160px)] text-center"
+          className="rv relative flex w-full max-w-[960px] scroll-mt-8 flex-col items-center pt-[clamp(160px,20vw,300px)] pb-[clamp(72px,9vw,112px)] text-center"
         >
-          <h2 className="font-display text-[clamp(2rem,5.2vw,3.5rem)] leading-[0.98] font-extrabold tracking-[-0.035em]">
-            Get early access.
+          <h2 className="font-display text-[clamp(2.3rem,6vw,4.2rem)] leading-[0.95] font-extrabold tracking-[-0.04em]">
+            <span className="hl">Get early access.</span>
           </h2>
-          <p className="rv mt-4 max-w-md text-lg text-muted">
-            Join the waitlist and we&apos;ll email you when Cobble is ready.
+          <p className="rv mt-5 max-w-md text-lg text-[#f6d5bd]">
+            Free during early access. We&apos;ll email you when Cobble is ready.
           </p>
-          <div className="mt-8 w-full max-w-md">
+          <div className="mt-8 w-full max-w-[560px]">
             <WaitlistForm />
           </div>
         </section>
       </main>
 
-      <footer className="rv relative z-10 border-t border-line">
-        <div className="mx-auto flex w-full max-w-[960px] flex-wrap justify-between gap-3 px-5 py-6 text-sm text-muted">
+      <footer className="rv relative z-10 border-t border-white/10">
+        <div className="mx-auto flex w-full max-w-[960px] flex-wrap justify-between gap-3 px-5 py-6 text-sm text-[#f6d5bd]/80">
           <span>Cobble</span>
           <Link
             href="/privacy"
-            className="underline underline-offset-4 hover:text-ink"
+            className="underline underline-offset-4 hover:text-bone"
           >
             Privacy policy
           </Link>

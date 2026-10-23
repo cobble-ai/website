@@ -4,7 +4,7 @@
 const QUESTIONS = [
   {
     q: "What is Cobble?",
-    a: "Cobble is an AI editor that edits your videos and saves your time the smart way.",
+    a: "Cobble is an AI video editor for iPhone that learns how you edit, then cuts your reels the same way: dead air gone, best takes picked, b-roll placed.",
   },
   {
     q: "How does it work?",
@@ -24,8 +24,6 @@ const QUESTIONS = [
   },
 ];
 
-const STEPS = ["Add your clips", "Write a prompt", "Get your edit"];
-
 function Plus() {
   return (
     <span
@@ -41,34 +39,6 @@ function Plus() {
         />
       </svg>
     </span>
-  );
-}
-
-function StepVisual() {
-  return (
-    <div aria-hidden className="flex flex-wrap items-center gap-2.5 pt-1 pb-7 pl-1">
-      {STEPS.map((label, index) => (
-        <span key={label} className="contents">
-          <span className="flex items-center gap-2.5 rounded-full border-2 border-[#2a0d11] bg-card py-2 pr-4 pl-2 text-[0.95rem] font-bold text-[#2a0d11] shadow-[0_3px_0_0_#2a0d11]">
-            <span className="grid h-7 w-7 place-items-center rounded-full border-2 border-[#2a0d11] bg-bone text-sm">
-              {index + 1}
-            </span>
-            {label}
-          </span>
-          {index < STEPS.length - 1 && (
-            <svg width="22" height="14" viewBox="0 0 22 14" fill="none" className="shrink-0 text-[#2a0d11]">
-              <path
-                d="M1 7h18M14 1l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          )}
-        </span>
-      ))}
-    </div>
   );
 }
 
@@ -98,18 +68,6 @@ export default function FAQ() {
           </details>
         ))}
 
-        <details className="rv group border-t border-line" style={{ ["--i" as string]: 1 } as React.CSSProperties}>
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-5 px-1 py-6 font-display text-[1.12rem] leading-[1.3] font-semibold tracking-[-0.015em] text-ink focus-visible:rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink [&::-webkit-details-marker]:hidden">
-            How does it work, step by step?
-            <Plus />
-          </summary>
-          <div className="px-1 pr-12">
-            <p className="max-w-[38rem] pb-4 text-[1.06rem] text-muted">
-              Three steps, and you stay in control the whole way.
-            </p>
-            <StepVisual />
-          </div>
-        </details>
       </div>
     </section>
   );

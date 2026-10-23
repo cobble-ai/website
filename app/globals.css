@@ -257,3 +257,65 @@ input:-webkit-autofill {
   box-shadow: 0 0 0 1000px #ffffff inset;
   transition: background-color 9999s ease-in-out 0s;
 }
+
+/* Features: the dead-air bars squeeze out of the waveform, then come back. */
+@keyframes wave-cut {
+  0%, 30% { width: 5px; margin-inline: 1.5px; opacity: 1; }
+  45%, 85% { width: 0; margin-inline: 0; opacity: 0; }
+  100% { width: 5px; margin-inline: 1.5px; opacity: 1; }
+}
+.wave-dead { animation: wave-cut 3.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .wave-dead { animation: none; } }
+
+
+/* Features: b-roll clips drop onto the timeline as the playhead reaches them. */
+.broll-clip { opacity: 0; }
+.broll-clip-1 { animation: broll-drop-1 7s ease-out infinite; }
+.broll-clip-2 { animation: broll-drop-2 7s ease-out infinite; }
+.broll-clip-3 { animation: broll-drop-3 7s ease-out infinite; }
+@keyframes broll-drop-1 {
+  0%, 3% { opacity: 0; transform: translateY(-80px) rotate(-7deg) scale(1.1); }
+  9% { opacity: 1; transform: translateY(3px) rotate(0) scale(1); }
+  11%, 88% { opacity: 1; transform: none; }
+  95%, 100% { opacity: 0; transform: none; }
+}
+@keyframes broll-drop-2 {
+  0%, 30% { opacity: 0; transform: translateY(-80px) rotate(6deg) scale(1.1); }
+  36% { opacity: 1; transform: translateY(3px) rotate(0) scale(1); }
+  38%, 88% { opacity: 1; transform: none; }
+  95%, 100% { opacity: 0; transform: none; }
+}
+@keyframes broll-drop-3 {
+  0%, 58% { opacity: 0; transform: translateY(-80px) rotate(-5deg) scale(1.1); }
+  64% { opacity: 1; transform: translateY(3px) rotate(0) scale(1); }
+  66%, 88% { opacity: 1; transform: none; }
+  95%, 100% { opacity: 0; transform: none; }
+}
+.broll-ph { animation: broll-playhead 7s linear infinite; }
+@keyframes broll-playhead {
+  0% { left: 0%; opacity: 1; }
+  88% { left: 100%; opacity: 1; }
+  93% { left: 100%; opacity: 0; }
+  94% { left: 0%; opacity: 0; }
+  100% { left: 0%; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .broll-clip { animation: none !important; opacity: 1; }
+  .broll-ph { animation: none; left: 62%; }
+}
+
+
+/* Bottom of the page: peach deepens back into the hero's maroon, so the page
+   opens and closes on the same colour. Mirror of .page-glow. */
+.page-glow-bottom {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 860px;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 85%, #94434b 0%, #7b333b 55%);
+  -webkit-mask-image: linear-gradient(to top, #000 60%, transparent);
+  mask-image: linear-gradient(to top, #000 60%, transparent);
+}
+@media (max-width: 639px) {
+  .page-glow-bottom { height: 720px; }
+}

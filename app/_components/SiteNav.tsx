@@ -94,7 +94,7 @@ export default function SiteNav() {
           compact ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
         }`}
       >
-        Join cobble now
+        Get early access
       </a>
     </header>
   );
