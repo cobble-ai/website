@@ -207,13 +207,20 @@ export default function HeroVisual() {
       (entries) => {
         // Start only once the visual is fully on screen, so a visual that is
         // partly visible at load does not start early.
-        if (started || !entries.some((entry) => entry.intersectionRatio >= 0.98)) return;
+        // On phones the visual is taller than the screen, so it can never be
+        // 98% visible; there, start once it fills most of the screen.
+        const inView = entries.some(
+          (entry) =>
+            entry.intersectionRatio >= 0.98 ||
+            entry.intersectionRect.height >= window.innerHeight * 0.85,
+        );
+        if (started || !inView) return;
         started = true;
         observer.disconnect();
         videoRef.current?.play().catch(() => {});
         apply();
       },
-      { threshold: [0, 0.98, 1] },
+      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.98, 1] },
     );
     if (root) observer.observe(root);
     else apply();
