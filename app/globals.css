@@ -319,3 +319,26 @@ input:-webkit-autofill {
 @media (max-width: 639px) {
   .page-glow-bottom { height: 720px; }
 }
+
+/* Founders: drifting glows, a flowing dashed flight path, slowly turning photo rings. */
+.founder-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(48px);
+  animation: founder-drift 14s ease-in-out infinite alternate;
+}
+.founder-blob-1 { width: 340px; height: 340px; top: 8%; left: -6%; background: rgba(163, 48, 63, 0.28); }
+.founder-blob-2 { width: 300px; height: 300px; top: 34%; left: 28%; background: rgba(246, 213, 189, 0.75); animation-delay: -5s; }
+.founder-blob-3 { width: 280px; height: 280px; bottom: 4%; right: -4%; background: rgba(110, 36, 50, 0.2); animation-delay: -9s; }
+@keyframes founder-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(40px, -30px) scale(1.12); }
+}
+.founder-dash { animation: founder-dash 1.4s linear infinite; }
+@keyframes founder-dash { to { stroke-dashoffset: -14; } }
+.founder-ring { animation: founder-spin 18s linear infinite; }
+@keyframes founder-spin { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .founder-blob, .founder-dash, .founder-ring { animation: none; }
+  .founder-dot { display: none; }
+}
