@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { MARK_PATHS, MARK_VIEWBOX } from "@/lib/intro-geometry";
 
 // Top-left wordmark, top-right floating pill. The pill shows at the top of the
 // page and when scrolling up; scrolling down swaps it for a compact
@@ -56,15 +55,7 @@ export default function SiteNav() {
         aria-label="Cobble home"
         className="rv pointer-events-auto absolute top-5 left-[calc(max(0px,(100vw-1200px)/2)+1.25rem)] font-display text-[1.75rem] leading-none font-extrabold tracking-[-0.045em] text-[#f6d5bd] lowercase [text-shadow:2px_0_0_#0a0a0a,-2px_0_0_#0a0a0a,0_2px_0_#0a0a0a,0_-2px_0_#0a0a0a,2px_2px_0_#0a0a0a,-2px_-2px_0_#0a0a0a,2px_-2px_0_#0a0a0a,-2px_2px_0_#0a0a0a,0_3px_0_#0a0a0a] sm:top-6"
       >
-        <svg
-          viewBox={MARK_VIEWBOX}
-          aria-hidden="true"
-          className="block h-[2.1rem] w-auto"
-        >
-          {MARK_PATHS.map((d, i) => (
-            <path key={i} d={d} fill="#f6d5bd" stroke="#0a0a0a" strokeWidth="6" strokeLinejoin="round" paintOrder="stroke" />
-          ))}
-        </svg>
+        cobble
       </Link>
 
       {/* Floating pill: links + CTA, top-right. */}
