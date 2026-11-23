@@ -345,7 +345,7 @@ export default function WaitlistForm() {
                 autoComplete="email"
                 enterKeyHint="next"
                 required
-                placeholder="you@domain.com"
+                placeholder="Your email"
                 value={form.email}
                 onChange={(event) => {
                   expand();
